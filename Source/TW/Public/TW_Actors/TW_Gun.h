@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "TW_Gun.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGunFiredDelegate, int32, CurrentAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, int32, CurrentAmmo);
 
 UCLASS()
 class TW_API ATW_Gun : public AActor
@@ -16,11 +16,14 @@ class TW_API ATW_Gun : public AActor
 public:
 	ATW_Gun();
 
-	UFUNCTION()
+	FORCEINLINE int32 GetCurrentAmmo() const {return CurrentAmmo;}
+	
+	FORCEINLINE void SetCurrentAmmo(int32 NewAmmo) {CurrentAmmo = NewAmmo;};
+	
 	void FireGun();
 	
 	UPROPERTY()
-	FGunFiredDelegate GunFired;
+	FReloadDelegate ReloadGun;
 
 protected:
 	virtual void BeginPlay() override;

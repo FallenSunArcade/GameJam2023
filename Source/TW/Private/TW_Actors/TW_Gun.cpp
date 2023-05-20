@@ -15,9 +15,8 @@ void ATW_Gun::FireGun()
 	{
 		--CurrentAmmo;
 	}
-
-	// Update the listeners ammo
-	GunFired.Broadcast(CurrentAmmo);
+	
+	//GunFired.Broadcast(CurrentAmmo);
 }
 
 void ATW_Gun::BeginPlay()

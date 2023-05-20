@@ -57,7 +57,7 @@ void ATW_Player::BeginPlay()
 	}
 }
 
-void ATW_Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
