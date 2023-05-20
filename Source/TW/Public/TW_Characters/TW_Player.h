@@ -59,9 +59,9 @@ private:
 	TSubclassOf<ATW_Gun> GunClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
-	int32 MaxAmmo;
+	int32 MaxAmmo = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
-	int32 CurrentAmmo;
+	int32 CurrentAmmo = 0;
 };
 
