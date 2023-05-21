@@ -8,6 +8,8 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, int32, CurrentAmmo);
 
+class UStaticMeshComponent;
+
 UCLASS()
 class TW_API ATW_Gun : public AActor
 {
@@ -29,6 +31,12 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	UPROPERTY(EditAnywhere, Category = "Gun")
+	UStaticMeshComponent* GunMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Gun")
+	UParticleSystem* MuzzleFlash;
+	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 MaxAmmo;
 

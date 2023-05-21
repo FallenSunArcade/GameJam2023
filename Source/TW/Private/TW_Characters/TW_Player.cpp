@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "TW_Actors/TW_Gun.h"
 
 
 ATW_Player::ATW_Player()
@@ -55,6 +56,20 @@ void ATW_Player::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	if(*GunClass)
+	{
+		if(Gun = GetWorld()->SpawnActor<ATW_Gun>(GunClass))
+		{
+			Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
+			Gun->SetOwner(this);
+		}
+	}
+
+	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
+	
+	
+	
 }
 
 void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -65,6 +80,7 @@ void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATW_Player::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATW_Player::Look);
+		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ATW_Player::Shoot);
 	}
 }
 
@@ -93,6 +109,16 @@ void ATW_Player::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+void ATW_Player::Shoot(const FInputActionValue& Value)
+{
+	GunFired.Broadcast(CurrentAmmo);
+	if(Gun)
+	{
+		Gun->FireGun();
+	}
+}
+
 
 
 

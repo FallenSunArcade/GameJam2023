@@ -7,6 +7,8 @@
 #include "InputActionValue.h"
 #include "TW_Player.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGunFiredDelegate, int32, CurrentGunsAmmo);
+
 class USpringArmComponent;
 class UCameraComponent;
 class UInputMappingContext;
@@ -26,10 +28,17 @@ public:
 	
 	void Look(const FInputActionValue& Value);
 
+	void Shoot(const FInputActionValue& Value);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GunWasFired(int32 CurrentGunsAmmo);
+	
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
-			
+
+	UPROPERTY(BlueprintAssignable, Category = "Test")
+	FGunFiredDelegate GunFired;
 
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
@@ -55,13 +64,21 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ShootAction;
+
 	UPROPERTY(EditAnywhere, Category = Gun)
 	TSubclassOf<ATW_Gun> GunClass;
 
+	UPROPERTY()
+	ATW_Gun* Gun = nullptr;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
 	int32 MaxAmmo = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
 	int32 CurrentAmmo = 0;
+
+
 };
 
