@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "TW_BaseCharacter.h"
 #include "TW_Player.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGunFiredDelegate, int32, CurrentGunsAmmo);
@@ -17,7 +17,7 @@ class UInputComponent;
 class ATW_Gun;
 
 UCLASS()
-class ATW_Player : public ACharacter
+class ATW_Player : public ATW_BaseCharacter
 {
 	GENERATED_BODY()
 
@@ -66,19 +66,5 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* ShootAction;
-
-	UPROPERTY(EditAnywhere, Category = Gun)
-	TSubclassOf<ATW_Gun> GunClass;
-
-	UPROPERTY()
-	ATW_Gun* Gun = nullptr;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
-	int32 MaxAmmo = 0;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
-	int32 CurrentAmmo = 0;
-
-
 };
 

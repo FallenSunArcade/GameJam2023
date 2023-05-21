@@ -67,10 +67,8 @@ void ATW_Player::BeginPlay()
 	}
 
 	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
-	
-	
-	
 }
+
 
 void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
