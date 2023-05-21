@@ -67,6 +67,17 @@ void ATW_Player::BeginPlay()
 	}
 
 	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
+	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
+}
+
+float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+	AActor* DamageCauser)
+{
+	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	PlayerDamaged.Broadcast(CurrentHealth);
+
+	return DamageTaken;
 }
 
 

@@ -8,6 +8,7 @@
 #include "TW_Player.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGunFiredDelegate, int32, CurrentGunsAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDamagedDelegate, int32, CurrentPlayerHealth);
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -32,18 +33,26 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void GunWasFired(int32 CurrentGunsAmmo);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayerWasDamaged(int32 PlayersCurrentHealth);
 	
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	UPROPERTY(BlueprintAssignable, Category = "Test")
+	UPROPERTY(BlueprintAssignable)
 	FGunFiredDelegate GunFired;
+
+	UPROPERTY(BlueprintAssignable)
+	FPlayerDamagedDelegate PlayerDamaged;
 
 protected:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
 	virtual void BeginPlay() override;
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

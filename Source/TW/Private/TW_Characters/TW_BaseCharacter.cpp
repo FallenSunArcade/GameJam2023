@@ -26,6 +26,10 @@ void ATW_BaseCharacter::BeginPlay()
 float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
 	AActor* DamageCauser)
 {
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	CurrentHealth -= DamageTaken;
+	CurrentHealth = FMath::Clamp(CurrentHealth, 0.f, MaxHealth);
+
+	return DamageTaken;
 }
 
