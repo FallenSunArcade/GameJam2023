@@ -112,10 +112,14 @@ void ATW_Player::Look(const FInputActionValue& Value)
 
 void ATW_Player::Shoot(const FInputActionValue& Value)
 {
-	GunFired.Broadcast(CurrentAmmo);
-	if(Gun)
+	if(CurrentAmmo > 0)
 	{
-		Gun->FireGun();
+		if(Gun)
+		{
+			Gun->FireGun();
+		}
+		--CurrentAmmo;
+		GunFired.Broadcast(CurrentAmmo);
 	}
 }
 
