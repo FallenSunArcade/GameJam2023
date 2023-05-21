@@ -17,6 +17,8 @@ class TW_API ATW_BaseCharacter : public ACharacter
 public:
 	ATW_BaseCharacter();
 
+	bool FireGun();
+
 protected:
 	virtual void BeginPlay() override;
 

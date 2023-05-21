@@ -15,34 +15,22 @@
 ATW_Player::ATW_Player()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
-	// Don't rotate when the controller rotates. Let that just affect the camera.
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationYaw = false;
-	bUseControllerRotationRoll = false;
-
-	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
-
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
+	
+	//GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 300.0f, 0.0f); // ...at this rotation rate
+	
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
 	GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
-
-	// Create a camera boom (pulls in towards the player if there is a collision)
+	
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
-	// Create a follow camera
+	CameraBoom->TargetArmLength = 250.0f; 
+	
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
 }
 
 void ATW_Player::BeginPlay()
@@ -57,15 +45,6 @@ void ATW_Player::BeginPlay()
 		}
 	}
 
-	if(*GunClass)
-	{
-		if(Gun = GetWorld()->SpawnActor<ATW_Gun>(GunClass))
-		{
-			Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
-			Gun->SetOwner(this);
-		}
-	}
-
 	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
 	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
 }
@@ -75,6 +54,7 @@ float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 {
 	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
+	UE_LOG(LogTemp, Display, TEXT("Taking Damage %d (%s)"), CurrentHealth, *GetName());
 	PlayerDamaged.Broadcast(CurrentHealth);
 
 	return DamageTaken;
@@ -121,13 +101,8 @@ void ATW_Player::Look(const FInputActionValue& Value)
 
 void ATW_Player::Shoot(const FInputActionValue& Value)
 {
-	if(CurrentAmmo > 0)
+	if(FireGun())
 	{
-		if(Gun)
-		{
-			Gun->FireGun();
-		}
-		--CurrentAmmo;
 		GunFired.Broadcast(CurrentAmmo);
 	}
 }

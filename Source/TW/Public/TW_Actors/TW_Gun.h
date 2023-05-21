@@ -9,6 +9,8 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, int32, CurrentAmmo);
 
 class UStaticMeshComponent;
+class APawn;
+class AController;
 
 UCLASS()
 class TW_API ATW_Gun : public AActor
@@ -23,6 +25,8 @@ public:
 	FORCEINLINE void SetCurrentAmmo(int32 NewAmmo) {CurrentAmmo = NewAmmo;};
 	
 	void FireGun();
+
+	void InitializeGun();
 	
 	UPROPERTY()
 	FReloadDelegate ReloadGun;
@@ -39,7 +43,16 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 MaxAmmo;
-
+	
+	UPROPERTY(EditAnywhere)
+	float Damage = 10;
+	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 CurrentAmmo;
+
+	UPROPERTY()
+	APawn* GunOwner;
+
+	UPROPERTY()
+	AController* GunOwnerController;
 };

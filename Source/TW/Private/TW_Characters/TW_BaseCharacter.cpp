@@ -3,10 +3,27 @@
 
 #include "TW_Characters/TW_BaseCharacter.h"
 #include "TW_Actors/TW_Gun.h"
+#include "Components/CapsuleComponent.h"
 
 ATW_BaseCharacter::ATW_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	SetRootComponent(GetCapsuleComponent());
+}
+
+bool ATW_BaseCharacter::FireGun()
+{
+	if(CurrentAmmo > 0)
+	{
+		if(Gun)
+		{
+			Gun->FireGun();
+		}
+		--CurrentAmmo;
+		return true;
+	}
+
+	return false;
 }
 
 void ATW_BaseCharacter::BeginPlay()
@@ -19,6 +36,7 @@ void ATW_BaseCharacter::BeginPlay()
 		{
 			Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 			Gun->SetOwner(this);
+			Gun->InitializeGun();
 		}
 	}
 }
