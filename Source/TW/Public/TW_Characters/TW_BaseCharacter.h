@@ -9,6 +9,7 @@
 
 class ATW_Gun;
 class UStaticMeshComponent;
+class UAnimMontage;
 
 UCLASS()
 class TW_API ATW_BaseCharacter : public ACharacter
@@ -45,5 +46,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hat")
 	UStaticMeshComponent* HatMesh;
-	
+
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	UAnimMontage* FireGunMontage;
 };

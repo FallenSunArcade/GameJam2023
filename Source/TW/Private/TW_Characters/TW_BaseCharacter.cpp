@@ -4,6 +4,7 @@
 #include "TW_Characters/TW_BaseCharacter.h"
 #include "TW_Actors/TW_Gun.h"
 #include "Components/CapsuleComponent.h"
+#include "Animation/AnimMontage.h"
 
 ATW_BaseCharacter::ATW_BaseCharacter()
 {
@@ -19,8 +20,10 @@ bool ATW_BaseCharacter::FireGun()
 {
 	if(CurrentAmmo > 0)
 	{
-		if(Gun)
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		if(Gun && AnimInstance && FireGunMontage)
 		{
+			AnimInstance->Montage_Play(FireGunMontage);
 			Gun->FireGun();
 		}
 		--CurrentAmmo;
