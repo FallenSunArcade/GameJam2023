@@ -7,6 +7,7 @@
 #include "GameFramework/Controller.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/DamageEvents.h"
+#include "NiagaraComponent.h"
 
 
 ATW_Gun::ATW_Gun()

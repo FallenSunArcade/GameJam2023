@@ -47,6 +47,10 @@ void ATW_Player::BeginPlay()
 
 	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
 	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
+	StartDeadEye.AddDynamic(this, &ATW_Player::DeadEyeInProgress);
+	EndDeadEye.AddDynamic(this, &ATW_Player::DeadEyeEnded);
+	
+	GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
 }
 
 float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
@@ -60,6 +64,31 @@ float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	return DamageTaken;
 }
 
+void ATW_Player::UpdateDeadEyeMeter()
+{
+	if(bDeadEyeInProgress)
+	{
+		--CurrentDeadEyeTime;
+		CurrentDeadEyeTime = FMath::Clamp(CurrentDeadEyeTime, 0, MaxDeadEyeTime);
+		if(CurrentDeadEyeTime > 0)
+		{
+			StartDeadEye.Broadcast(CurrentDeadEyeTime);
+		}
+		else
+		{
+			GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
+			EndDeadEye.Broadcast(CurrentDeadEyeTime);
+			bDeadEyeInProgress = false;
+		}
+	}
+	else
+	{
+		++CurrentDeadEyeTime;
+		CurrentDeadEyeTime = FMath::Clamp(CurrentDeadEyeTime, 0, MaxDeadEyeTime);
+		EndDeadEye.Broadcast(CurrentDeadEyeTime);
+	}
+}
+
 
 void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -70,6 +99,8 @@ void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATW_Player::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATW_Player::Look);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ATW_Player::Shoot);
+		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &ATW_Player::Aim);
+		EnhancedInputComponent->BindAction(DeadEyeAction, ETriggerEvent::Triggered, this, &ATW_Player::DeadEye);
 	}
 }
 
@@ -104,6 +135,26 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 	if(FireGun())
 	{
 		GunFired.Broadcast(CurrentAmmo);
+	}
+}
+
+void ATW_Player::Aim(const FInputActionValue& Value)
+{
+}
+
+void ATW_Player::DeadEye(const FInputActionValue& Value)
+{
+	if(!bDeadEyeInProgress)
+	{
+		bDeadEyeInProgress = true;
+		StartDeadEye.Broadcast(CurrentDeadEyeTime);
+		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 0.1f, true, 0.f);
+	}
+	else
+	{
+		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
+		bDeadEyeInProgress = false;
+		EndDeadEye.Broadcast(CurrentDeadEyeTime);
 	}
 }
 

@@ -11,6 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, int32, CurrentAmmo)
 class UStaticMeshComponent;
 class APawn;
 class AController;
+class UNiagaraComponent;
 
 UCLASS()
 class TW_API ATW_Gun : public AActor
