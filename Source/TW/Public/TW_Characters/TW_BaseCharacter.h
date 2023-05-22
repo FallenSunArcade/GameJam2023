@@ -8,6 +8,7 @@
 
 
 class ATW_Gun;
+class UStaticMeshComponent;
 
 UCLASS()
 class TW_API ATW_BaseCharacter : public ACharacter
@@ -30,17 +31,19 @@ protected:
 	UPROPERTY()
 	ATW_Gun* Gun = nullptr;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun)
 	int32 MaxAmmo = 0;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun)
 	int32 CurrentAmmo = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	int32 MaxHealth = 100;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	int32 CurrentHealth = 0;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hat")
+	UStaticMeshComponent* HatMesh;
 	
 };

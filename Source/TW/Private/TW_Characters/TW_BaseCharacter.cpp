@@ -9,6 +9,10 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	SetRootComponent(GetCapsuleComponent());
+
+	HatMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hat Mesh"));
+
+	HatMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("HatSocket"));
 }
 
 bool ATW_BaseCharacter::FireGun()
