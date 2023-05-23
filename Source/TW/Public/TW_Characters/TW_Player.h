@@ -65,10 +65,10 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FDeadEyeEndDelegate EndDeadEye;
 
-	UPROPERTY(EditAnywhere, Category = "DeadEye")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "DeadEye")
 	int32 MaxDeadEyeTime = 5;
 
-	UPROPERTY(EditAnywhere, Category = "DeadEye")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "DeadEye")
 	int32 CurrentDeadEyeTime = 5;
 	
 protected:
