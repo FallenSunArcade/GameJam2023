@@ -17,12 +17,16 @@ ATW_Gun::ATW_Gun()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	GunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gun Mesh"));
 	GunMesh->SetupAttachment(RootComponent);
+	MuzzleFlash = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Muzzle Flash"));
+	MuzzleFlash->SetupAttachment(GunMesh);
 }
 
 void ATW_Gun::FireGun()
 {
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, GunMesh, TEXT("MuzzleFlashSocket"));
+	GetWorldTimerManager().SetTimer(MuzzleFlashTimer, this, &ATW_Gun::StopMuzzleFlash, 0.2f, false);
+	MuzzleFlash->Activate(true);
 
+	UGameplayStatics::PlaySoundAtLocation(this, GunShootingSound, GetActorLocation());
 	FVector Location;
 	FRotator Rotation;
 	FVector ShotDirection;
@@ -46,7 +50,6 @@ void ATW_Gun::FireGun()
 		}
 
 	}
-	
 }
 
 void ATW_Gun::InitializeGun()
@@ -55,6 +58,11 @@ void ATW_Gun::InitializeGun()
 	check(GunOwner);
 	GunOwnerController = GunOwner->GetController();
 	check(GunOwnerController);
+}
+
+void ATW_Gun::StopMuzzleFlash()
+{
+	MuzzleFlash->Deactivate();
 }
 
 void ATW_Gun::BeginPlay()

@@ -12,6 +12,7 @@ class UStaticMeshComponent;
 class APawn;
 class AController;
 class UNiagaraComponent;
+class USoundBase;
 
 UCLASS()
 class TW_API ATW_Gun : public AActor
@@ -28,6 +29,9 @@ public:
 	void FireGun();
 
 	void InitializeGun();
+
+	UFUNCTION()
+	void StopMuzzleFlash();
 	
 	UPROPERTY()
 	FReloadDelegate ReloadGun;
@@ -40,7 +44,10 @@ private:
 	UStaticMeshComponent* GunMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Gun")
-	UParticleSystem* MuzzleFlash;
+	UNiagaraComponent* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere, Category = "Gun")
+	USoundBase* GunShootingSound;
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 MaxAmmo;
@@ -56,4 +63,8 @@ private:
 
 	UPROPERTY()
 	AController* GunOwnerController;
+
+
+	
+	FTimerHandle MuzzleFlashTimer;
 };

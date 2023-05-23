@@ -9,7 +9,6 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
-#include "TW_Actors/TW_Gun.h"
 
 
 ATW_Player::ATW_Player()
