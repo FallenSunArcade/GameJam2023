@@ -75,7 +75,7 @@ void ATW_Player::UpdateDeadEyeMeter()
 		}
 		else
 		{
-			GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
+			GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 			EndDeadEye.Broadcast(CurrentDeadEyeTime);
 			bDeadEyeInProgress = false;
 		}
@@ -151,7 +151,7 @@ void ATW_Player::DeadEye(const FInputActionValue& Value)
 	}
 	else
 	{
-		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
+		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 		bDeadEyeInProgress = false;
 		EndDeadEye.Broadcast(CurrentDeadEyeTime);
 	}
