@@ -22,9 +22,8 @@ public:
 	ATW_BaseCharacter();
 
 	bool FireGun();
-
-	void StartAimingGunMontage();
-	void StopAimingGunMontage();
+	
+	bool CheckIsAiming() const { return bIsAiming;}
 
 protected:
 	virtual void BeginPlay() override;
@@ -66,9 +65,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* ReloadGunMontage;
-
-	UPROPERTY(EditAnywhere, Category = "Montages")
-	UAnimMontage* AimGunMontage;
 
 	UPROPERTY()
 	UAnimInstance* AnimInstance;

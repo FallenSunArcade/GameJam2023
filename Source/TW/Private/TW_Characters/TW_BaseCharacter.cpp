@@ -24,46 +24,14 @@ bool ATW_BaseCharacter::FireGun()
 	{
 		if(Gun && AnimInstance && FireGunMontage)
 		{
-			if(bIsAiming)
-			{
-				AnimInstance->Montage_Stop(0.f, AimGunMontage);
-			}
-			
 			AnimInstance->Montage_Play(FireGunMontage);
-			
-			if(bIsAiming)
-			{
-				AnimInstance->Montage_Play(AimGunMontage, 1,  EMontagePlayReturnType::MontageLength,
-					AimGunMontage->GetPlayLength(), false);
-			}
-			
 			Gun->FireGun();
 			CurrentAmmo = Gun->GetCurrentAmmo();
-
-
 		}
 		return true;
 	}
 
 	return false;
-}
-
-void ATW_BaseCharacter::StartAimingGunMontage()
-{
-	if(AnimInstance)
-	{
-		AnimInstance->Montage_Play(AimGunMontage);
-		bIsAiming = true;
-	}
-}
-
-void ATW_BaseCharacter::StopAimingGunMontage()
-{
-	if(AnimInstance)
-	{
-		AnimInstance->Montage_Stop(0.f, AimGunMontage);
-		bIsAiming = false;
-	}
 }
 
 void ATW_BaseCharacter::BeginPlay()
@@ -105,19 +73,7 @@ void ATW_BaseCharacter::ReloadGun(float ReloadTime)
 		Gun->RefillAmmo();
 		if(AnimInstance)
 		{
-			if(bIsAiming)
-			{
-				AnimInstance->Montage_Stop(0.f, AimGunMontage);
-			}
-			
 			AnimInstance->Montage_Play(ReloadGunMontage);
-
-			if(bIsAiming)
-			{
-				AnimInstance->Montage_Play(AimGunMontage, 1,  EMontagePlayReturnType::MontageLength,
-					ReloadGunMontage->GetPlayLength(), false);
-			}
-			
 			GetWorldTimerManager().SetTimer(ReloadTimer, this, &ATW_BaseCharacter::FinishedReloading, ReloadTime, false);
 			bReloadingGun = true;
 		}

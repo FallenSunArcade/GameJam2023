@@ -6,7 +6,7 @@
 #include "Animation/AnimInstance.h"
 #include "TW_PlayerAnimInstance.generated.h"
 
-class APawn;
+class ATW_BaseCharacter;
 
 UCLASS()
 class TW_API UTW_PlayerAnimInstance : public UAnimInstance
@@ -22,6 +22,9 @@ private:
 	UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float GroundSpeed;
 
+	UPROPERTY(BlueprintReadOnly, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+	bool bIsAiming = false;
+
 	UPROPERTY()
-	APawn* Pawn;
+	ATW_BaseCharacter* BaseCharacter;
 };

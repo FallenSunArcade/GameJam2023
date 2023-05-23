@@ -154,14 +154,14 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 void ATW_Player::StartAiming(const FInputActionValue& Value)
 {
 	PlayerAiming.Broadcast(true);
-	StartAimingGunMontage();
+	bIsAiming = true;
 	CameraBoom->TargetArmLength = 150;
 }
 
 void ATW_Player::StopAiming(const FInputActionValue& Value)
 {
 	PlayerAiming.Broadcast(false);
-	StopAimingGunMontage();
+	bIsAiming = false;
 	CameraBoom->TargetArmLength = 250;
 }
 
