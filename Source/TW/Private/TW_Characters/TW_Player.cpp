@@ -91,7 +91,7 @@ void ATW_Player::UpdateDeadEyeMeter()
 
 void ATW_Player::UpdateHudAmmo()
 {
-	GunFired.Broadcast(CurrentAmmo);
+	GunFired.Broadcast(Gun->GetCurrentAmmo());
 }
 
 
@@ -145,7 +145,7 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 	if(Gun->GetCurrentAmmo() == 0)
 	{
 		GetWorldTimerManager().SetTimer(UpdateAmmoHandle, this, &ATW_Player::UpdateHudAmmo,
-			Gun->GetReloadTime() + .1f, false);
+			Gun->GetReloadTime(), false);
 	}
 }
 

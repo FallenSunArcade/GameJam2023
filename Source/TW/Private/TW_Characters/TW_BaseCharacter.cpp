@@ -68,6 +68,7 @@ void ATW_BaseCharacter::ReloadGun(float ReloadTime)
 {
 	if(!bReloadingGun && Gun->GetTotalAmmo() != 0)
 	{
+		Gun->RefillAmmo();
 		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance)
 		{
@@ -81,7 +82,6 @@ void ATW_BaseCharacter::ReloadGun(float ReloadTime)
 void ATW_BaseCharacter::FinishedReloading()
 {
 	bReloadingGun = false;
-	Gun->RefillAmmo();
 	CurrentAmmo = Gun->GetCurrentAmmo();
 }
 
