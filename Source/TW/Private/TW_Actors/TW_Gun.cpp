@@ -21,8 +21,37 @@ ATW_Gun::ATW_Gun()
 	MuzzleFlash->SetupAttachment(GunMesh);
 }
 
+void ATW_Gun::RefillAmmo()
+{
+	if(bInfiniteAmmo)
+	{
+		CurrentAmmo = AmmoLoadingCapacity;
+	}
+	else
+	{
+		if(TotalAmmo < AmmoLoadingCapacity)
+		{
+			CurrentAmmo = TotalAmmo;
+			TotalAmmo = 0;
+		}
+		else
+		{
+			CurrentAmmo = AmmoLoadingCapacity;
+			TotalAmmo -= AmmoLoadingCapacity;
+		}
+	}
+}
+
 void ATW_Gun::FireGun()
 {
+	--CurrentAmmo;
+	CurrentAmmo = FMath::Clamp(CurrentAmmo, 0, AmmoLoadingCapacity);
+
+	if(CurrentAmmo == 0)
+	{
+		ReloadGun.Broadcast(ReloadTime);
+	}
+	
 	GetWorldTimerManager().SetTimer(MuzzleFlashTimer, this, &ATW_Gun::StopMuzzleFlash, 0.2f, false);
 	MuzzleFlash->Activate(true);
 
@@ -41,7 +70,7 @@ void ATW_Gun::FireGun()
 
 	if(GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params))
 	{
-		DrawDebugSphere(GetWorld(), Hit.Location, 20, 16, FColor::Red, false, 2.0);
+		DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, false, 1.0);
 		AActor* HitActor = Hit.GetActor();
 		if (HitActor != nullptr)
 		{

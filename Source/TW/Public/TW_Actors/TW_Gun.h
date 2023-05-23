@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "TW_Gun.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, int32, CurrentAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, float, GunReloadTime);
 
 class UStaticMeshComponent;
 class APawn;
@@ -22,9 +22,15 @@ class TW_API ATW_Gun : public AActor
 public:
 	ATW_Gun();
 
-	FORCEINLINE int32 GetCurrentAmmo() const {return CurrentAmmo;}
+	FORCEINLINE int32 GetAmmoLoadingCapacity() const {return AmmoLoadingCapacity;}
+
+	FORCEINLINE int32 GetTotalAmmo() const {return TotalAmmo;}
 	
-	FORCEINLINE void SetCurrentAmmo(int32 NewAmmo) {CurrentAmmo = NewAmmo;};
+	FORCEINLINE int32 GetCurrentAmmo() const {return CurrentAmmo;}
+
+	FORCEINLINE float GetReloadTime() const {return ReloadTime;}
+
+	void RefillAmmo();
 	
 	void FireGun();
 
@@ -45,26 +51,33 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Gun")
 	UNiagaraComponent* MuzzleFlash;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Gun")
 	USoundBase* GunShootingSound;
+
+	UPROPERTY(EditAnywhere, Category = "Gun")
+	float Damage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Gun")
+	float ReloadTime = 2.f;
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
-	int32 MaxAmmo;
-	
-	UPROPERTY(EditAnywhere)
-	float Damage = 10;
+	int32 TotalAmmo = 150;
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
-	int32 CurrentAmmo;
+	int32 AmmoLoadingCapacity = 6;
+
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	int32 CurrentAmmo = 6;
+
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	bool bInfiniteAmmo = false;
 
 	UPROPERTY()
 	APawn* GunOwner;
 
 	UPROPERTY()
 	AController* GunOwnerController;
-
-
 	
 	FTimerHandle MuzzleFlashTimer;
 };

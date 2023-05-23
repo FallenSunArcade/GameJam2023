@@ -80,6 +80,9 @@ protected:
 
 	UFUNCTION()
 	void UpdateDeadEyeMeter();
+
+	UFUNCTION()
+	void UpdateHudAmmo();
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -110,6 +113,8 @@ private:
 	UInputAction* DeadEyeAction;
 
 	FTimerHandle UpdateDeadEyeMeterHandle;
+
+	FTimerHandle UpdateAmmoHandle;
 
 	bool bDeadEyeInProgress = false;
 };

@@ -10,6 +10,7 @@
 class ATW_Gun;
 class UStaticMeshComponent;
 class UAnimMontage;
+class UNiagaraComponent;
 
 UCLASS()
 class TW_API ATW_BaseCharacter : public ACharacter
@@ -25,6 +26,12 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	UFUNCTION()
+	void ReloadGun(float ReloadTime);
+
+	UFUNCTION()
+	void FinishedReloading();
 	
 	UPROPERTY(EditAnywhere, Category = Gun)
 	TSubclassOf<ATW_Gun> GunClass;
@@ -44,9 +51,21 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	int32 CurrentHealth = 0;
 
+	UPROPERTY(EditAnywhere, Category = "Player Stats")
+	UNiagaraComponent* BloodImpact;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hat")
 	UStaticMeshComponent* HatMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* FireGunMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	UAnimMontage* ReloadGunMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	UAnimMontage* AimGunMontage;
+
+	bool bReloadingGun = false;
+	FTimerHandle ReloadTimer;
 };

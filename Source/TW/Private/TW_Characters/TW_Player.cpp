@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "TW_Actors/TW_Gun.h"
 
 
 ATW_Player::ATW_Player()
@@ -88,6 +89,11 @@ void ATW_Player::UpdateDeadEyeMeter()
 	}
 }
 
+void ATW_Player::UpdateHudAmmo()
+{
+	GunFired.Broadcast(CurrentAmmo);
+}
+
 
 void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -134,6 +140,12 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 	if(FireGun())
 	{
 		GunFired.Broadcast(CurrentAmmo);
+	}
+
+	if(Gun->GetCurrentAmmo() == 0)
+	{
+		GetWorldTimerManager().SetTimer(UpdateAmmoHandle, this, &ATW_Player::UpdateHudAmmo,
+			Gun->GetReloadTime() + .1f, false);
 	}
 }
 
