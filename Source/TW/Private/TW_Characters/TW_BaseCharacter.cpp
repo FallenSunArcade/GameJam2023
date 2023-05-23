@@ -19,19 +19,51 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 
 bool ATW_BaseCharacter::FireGun()
 {
+	
 	if(CurrentAmmo > 0)
 	{
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(Gun && AnimInstance && FireGunMontage)
 		{
+			if(bIsAiming)
+			{
+				AnimInstance->Montage_Stop(0.f, AimGunMontage);
+			}
+			
 			AnimInstance->Montage_Play(FireGunMontage);
+			
+			if(bIsAiming)
+			{
+				AnimInstance->Montage_Play(AimGunMontage, 1,  EMontagePlayReturnType::MontageLength,
+					AimGunMontage->GetPlayLength(), false);
+			}
+			
 			Gun->FireGun();
 			CurrentAmmo = Gun->GetCurrentAmmo();
+
+
 		}
 		return true;
 	}
 
 	return false;
+}
+
+void ATW_BaseCharacter::StartAimingGunMontage()
+{
+	if(AnimInstance)
+	{
+		AnimInstance->Montage_Play(AimGunMontage);
+		bIsAiming = true;
+	}
+}
+
+void ATW_BaseCharacter::StopAimingGunMontage()
+{
+	if(AnimInstance)
+	{
+		AnimInstance->Montage_Stop(0.f, AimGunMontage);
+		bIsAiming = false;
+	}
 }
 
 void ATW_BaseCharacter::BeginPlay()
@@ -51,6 +83,8 @@ void ATW_BaseCharacter::BeginPlay()
 			Gun->ReloadGun.AddDynamic(this, &ATW_BaseCharacter::ReloadGun);
 		}
 	}
+
+	AnimInstance = GetMesh()->GetAnimInstance();
 }
 
 float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
@@ -69,10 +103,21 @@ void ATW_BaseCharacter::ReloadGun(float ReloadTime)
 	if(!bReloadingGun && Gun->GetTotalAmmo() != 0)
 	{
 		Gun->RefillAmmo();
-		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 		if(AnimInstance)
 		{
+			if(bIsAiming)
+			{
+				AnimInstance->Montage_Stop(0.f, AimGunMontage);
+			}
+			
 			AnimInstance->Montage_Play(ReloadGunMontage);
+
+			if(bIsAiming)
+			{
+				AnimInstance->Montage_Play(AimGunMontage, 1,  EMontagePlayReturnType::MontageLength,
+					ReloadGunMontage->GetPlayLength(), false);
+			}
+			
 			GetWorldTimerManager().SetTimer(ReloadTimer, this, &ATW_BaseCharacter::FinishedReloading, ReloadTime, false);
 			bReloadingGun = true;
 		}

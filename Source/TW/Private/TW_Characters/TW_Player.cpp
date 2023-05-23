@@ -49,6 +49,7 @@ void ATW_Player::BeginPlay()
 	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
 	StartDeadEye.AddDynamic(this, &ATW_Player::DeadEyeInProgress);
 	EndDeadEye.AddDynamic(this, &ATW_Player::DeadEyeEnded);
+	PlayerAiming.AddDynamic(this, &ATW_Player::IsPlayerAiming);
 	
 	GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
 }
@@ -104,7 +105,8 @@ void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATW_Player::Move);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATW_Player::Look);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Triggered, this, &ATW_Player::Shoot);
-		EnhancedInputComponent->BindAction(AimAction, ETriggerEvent::Triggered, this, &ATW_Player::Aim);
+		EnhancedInputComponent->BindAction(StartAimAction, ETriggerEvent::Triggered, this, &ATW_Player::StartAiming);
+		EnhancedInputComponent->BindAction(StopAimAction, ETriggerEvent::Triggered, this, &ATW_Player::StopAiming);
 		EnhancedInputComponent->BindAction(DeadEyeAction, ETriggerEvent::Triggered, this, &ATW_Player::DeadEye);
 	}
 }
@@ -149,8 +151,18 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 	}
 }
 
-void ATW_Player::Aim(const FInputActionValue& Value)
+void ATW_Player::StartAiming(const FInputActionValue& Value)
 {
+	PlayerAiming.Broadcast(true);
+	StartAimingGunMontage();
+	CameraBoom->TargetArmLength = 150;
+}
+
+void ATW_Player::StopAiming(const FInputActionValue& Value)
+{
+	PlayerAiming.Broadcast(false);
+	StopAimingGunMontage();
+	CameraBoom->TargetArmLength = 250;
 }
 
 void ATW_Player::DeadEye(const FInputActionValue& Value)

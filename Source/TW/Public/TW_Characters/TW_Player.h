@@ -11,6 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGunFiredDelegate, int32, CurrentGun
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDamagedDelegate, int32, CurrentPlayerHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeadEyeStartDelegate, int32, CurrentTime);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeadEyeEndDelegate, int32, CurrentTime);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FIsAimingDelegate, bool, bAiming);
 
 class USpringArmComponent;
 class UCameraComponent;
@@ -33,7 +34,9 @@ public:
 
 	void Shoot(const FInputActionValue& Value);
 
-	void Aim(const FInputActionValue& Value);
+	void StartAiming(const FInputActionValue& Value);
+
+	void StopAiming(const FInputActionValue& Value);
 
 	void DeadEye(const FInputActionValue& Value);
 
@@ -48,6 +51,9 @@ public:
 	
 	UFUNCTION(BlueprintImplementableEvent)
 	void DeadEyeEnded(int32 CurrentTime);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void IsPlayerAiming(bool bAiming);
 	
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	
@@ -64,6 +70,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FDeadEyeEndDelegate EndDeadEye;
+
+	UPROPERTY(BlueprintAssignable)
+	FIsAimingDelegate PlayerAiming;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "DeadEye")
 	int32 MaxDeadEyeTime = 5;
@@ -107,7 +116,10 @@ private:
 	UInputAction* ShootAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* AimAction;
+	UInputAction* StartAimAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* StopAimAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DeadEyeAction;

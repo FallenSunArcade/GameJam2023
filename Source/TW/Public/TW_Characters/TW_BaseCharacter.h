@@ -11,6 +11,7 @@ class ATW_Gun;
 class UStaticMeshComponent;
 class UAnimMontage;
 class UNiagaraComponent;
+class UAnimInstance;
 
 UCLASS()
 class TW_API ATW_BaseCharacter : public ACharacter
@@ -21,6 +22,9 @@ public:
 	ATW_BaseCharacter();
 
 	bool FireGun();
+
+	void StartAimingGunMontage();
+	void StopAimingGunMontage();
 
 protected:
 	virtual void BeginPlay() override;
@@ -65,7 +69,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* AimGunMontage;
+
+	UPROPERTY()
+	UAnimInstance* AnimInstance;
 	
 	bool bReloadingGun = false;
+
+	bool bIsAiming = false;
+	
 	FTimerHandle ReloadTimer;
 };
