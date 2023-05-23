@@ -65,7 +65,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* AimGunMontage;
-
+	
 	bool bReloadingGun = false;
 	FTimerHandle ReloadTimer;
 };

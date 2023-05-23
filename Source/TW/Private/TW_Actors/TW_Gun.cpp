@@ -46,11 +46,6 @@ void ATW_Gun::FireGun()
 {
 	--CurrentAmmo;
 	CurrentAmmo = FMath::Clamp(CurrentAmmo, 0, AmmoLoadingCapacity);
-
-	if(CurrentAmmo == 0)
-	{
-		ReloadGun.Broadcast(ReloadTime);
-	}
 	
 	GetWorldTimerManager().SetTimer(MuzzleFlashTimer, this, &ATW_Gun::StopMuzzleFlash, 0.2f, false);
 	MuzzleFlash->Activate(true);
@@ -92,6 +87,11 @@ void ATW_Gun::InitializeGun()
 void ATW_Gun::StopMuzzleFlash()
 {
 	MuzzleFlash->Deactivate();
+	
+	if(CurrentAmmo == 0)
+	{
+		ReloadGun.Broadcast(ReloadTime);
+	}
 }
 
 void ATW_Gun::BeginPlay()
