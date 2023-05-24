@@ -149,6 +149,11 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 	if(FireGun())
 	{
 		GunFired.Broadcast(CurrentAmmo);
+		
+		if(ShootingCameraShakeClass)
+		{
+			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootingCameraShakeClass);
+		}
 	}
 
 	if(Gun->GetCurrentAmmo() == 0)

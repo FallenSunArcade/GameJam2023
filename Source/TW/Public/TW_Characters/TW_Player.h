@@ -20,6 +20,7 @@ class UInputAction;
 class UInputComponent;
 class ATW_Gun;
 class ATW_Hud;
+class UCameraShakeBase;
 
 UCLASS()
 class ATW_Player : public ATW_BaseCharacter
@@ -100,6 +101,9 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UCameraShakeBase> ShootingCameraShakeClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -124,7 +128,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DeadEyeAction;
-
+	
 	FTimerHandle UpdateDeadEyeMeterHandle;
 
 	FTimerHandle UpdateAmmoHandle;
