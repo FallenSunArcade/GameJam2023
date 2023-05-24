@@ -32,7 +32,7 @@ public:
 
 	void RefillAmmo();
 	
-	void FireGun();
+	void FireGun(FVector ManualLocation = FVector::Zero(), FRotator ManualRotation = FRotator::ZeroRotator, bool ManualFireGun = false);
 
 	void InitializeGun();
 

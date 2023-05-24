@@ -19,6 +19,7 @@ class UInputMappingContext;
 class UInputAction;
 class UInputComponent;
 class ATW_Gun;
+class ATW_Hud;
 
 UCLASS()
 class ATW_Player : public ATW_BaseCharacter
@@ -129,5 +130,8 @@ private:
 	FTimerHandle UpdateAmmoHandle;
 
 	bool bDeadEyeInProgress = false;
+
+	UPROPERTY()
+	ATW_Hud* Hud;
 };
 

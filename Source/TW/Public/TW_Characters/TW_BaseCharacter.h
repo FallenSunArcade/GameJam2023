@@ -12,6 +12,7 @@ class UStaticMeshComponent;
 class UAnimMontage;
 class UNiagaraComponent;
 class UAnimInstance;
+class UDecalComponent;
 
 UCLASS()
 class TW_API ATW_BaseCharacter : public ACharacter
@@ -25,6 +26,10 @@ public:
 	
 	bool CheckIsAiming() const { return bIsAiming;}
 
+	void SetTagVisibility(bool Visibility, FRotator ShotDirection = FRotator::ZeroRotator, float TagHeight = 0.f);
+
+	bool IsTagged() const {return bTaggedVisible;}
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -66,12 +71,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* ReloadGunMontage;
 
+	UPROPERTY(EditAnywhere, Category = "DeadEyeMarker")
+	UStaticMeshComponent* DeadEyeMarkerMesh;
+
 	UPROPERTY()
 	UAnimInstance* AnimInstance;
 	
 	bool bReloadingGun = false;
 
 	bool bIsAiming = false;
+
+	bool bTaggedVisible = false;
 	
 	FTimerHandle ReloadTimer;
 };

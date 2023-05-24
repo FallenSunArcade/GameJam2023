@@ -42,7 +42,7 @@ void ATW_Gun::RefillAmmo()
 	}
 }
 
-void ATW_Gun::FireGun()
+void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool ManualFireGun)
 {
 	--CurrentAmmo;
 	CurrentAmmo = FMath::Clamp(CurrentAmmo, 0, AmmoLoadingCapacity);
@@ -51,10 +51,20 @@ void ATW_Gun::FireGun()
 	MuzzleFlash->Activate(true);
 
 	UGameplayStatics::PlaySoundAtLocation(this, GunShootingSound, GetActorLocation());
+	
 	FVector Location;
 	FRotator Rotation;
+
+	if(ManualFireGun)
+	{
+		Location = ManualLocation;
+		Rotation = ManualRotation;
+	}
+	else
+	{
+		GunOwnerController->GetPlayerViewPoint(Location, Rotation);
+	}
 	FVector ShotDirection;
-	GunOwnerController->GetPlayerViewPoint(Location, Rotation);
 	ShotDirection = -Rotation.Vector();
 	FVector End = Location + Rotation.Vector() * 10000;
 	

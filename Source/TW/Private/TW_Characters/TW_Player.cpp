@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "TW_Actors/TW_Gun.h"
+#include "UI/TW_Hud.h"
 
 
 ATW_Player::ATW_Player()
@@ -39,12 +40,13 @@ void ATW_Player::BeginPlay()
 	
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
+		Hud = Cast<ATW_Hud>(PlayerController->GetHUD());
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-
+	
 	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
 	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
 	StartDeadEye.AddDynamic(this, &ATW_Player::DeadEyeInProgress);
@@ -77,6 +79,11 @@ void ATW_Player::UpdateDeadEyeMeter()
 		}
 		else
 		{
+			if(Hud)
+			{
+				Hud->SetDeadEye(false);
+			}		
+
 			GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 			EndDeadEye.Broadcast(CurrentDeadEyeTime);
 			bDeadEyeInProgress = false;
@@ -169,12 +176,22 @@ void ATW_Player::DeadEye(const FInputActionValue& Value)
 {
 	if(!bDeadEyeInProgress)
 	{
+		if(Hud)
+		{
+			Hud->SetDeadEye(true);
+		}
+		
 		bDeadEyeInProgress = true;
 		StartDeadEye.Broadcast(CurrentDeadEyeTime);
 		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 0.1f, true, 0.f);
 	}
 	else
 	{
+		if(Hud)
+		{
+			Hud->SetDeadEye(false);
+		}
+		
 		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 		bDeadEyeInProgress = false;
 		EndDeadEye.Broadcast(CurrentDeadEyeTime);

@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Engine/DamageEvents.h"
+#include "Components/DecalComponent.h"
 
 ATW_BaseCharacter::ATW_BaseCharacter()
 {
@@ -15,6 +16,10 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 	HatMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hat Mesh"));
 
 	HatMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("HatSocket"));
+
+	DeadEyeMarkerMesh = CreateDefaultSubobject<UStaticMeshComponent>("Dead Eye Marker");
+	DeadEyeMarkerMesh->SetupAttachment(GetRootComponent());
+	SetTagVisibility(false);
 }
 
 bool ATW_BaseCharacter::FireGun()
@@ -32,6 +37,16 @@ bool ATW_BaseCharacter::FireGun()
 	}
 
 	return false;
+}
+
+void ATW_BaseCharacter::SetTagVisibility(bool Visibility, FRotator ShotDirection, float TagHeight)
+{
+	bTaggedVisible = Visibility;
+	FVector TagLocation = DeadEyeMarkerMesh->GetComponentLocation();
+	TagLocation.Z = TagHeight;
+	DeadEyeMarkerMesh->SetWorldRotation(ShotDirection);
+	DeadEyeMarkerMesh->SetWorldLocation(TagLocation);
+	DeadEyeMarkerMesh->SetVisibility(Visibility);
 }
 
 void ATW_BaseCharacter::BeginPlay()
