@@ -18,7 +18,7 @@ ATW_Player::ATW_Player()
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
 	//GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 300.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 360.0f, 0.0f); // ...at this rotation rate
 	
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
@@ -140,8 +140,8 @@ void ATW_Player::Look(const FInputActionValue& Value)
 	
 	if (Controller != nullptr)
 	{
-		AddControllerYawInput(LookAxisVector.X);
-		AddControllerPitchInput(LookAxisVector.Y);
+		AddControllerYawInput(LookAxisVector.X * GetWorld()->GetDeltaSeconds() * TurnRate);
+		AddControllerPitchInput(LookAxisVector.Y* GetWorld()->GetDeltaSeconds() * TurnRate);
 	}
 }
 
