@@ -6,7 +6,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Engine/DamageEvents.h"
-#include "Components/DecalComponent.h"
 
 ATW_BaseCharacter::ATW_BaseCharacter()
 {
@@ -25,15 +24,27 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 bool ATW_BaseCharacter::FireGun()
 {
 	
-	if(CurrentAmmo > 0)
+	if(CurrentAmmo > 0 && !bIsReloading)
 	{
-		if(Gun && AnimInstance && FireGunMontage)
+		if(Gun && AnimInstance && !bIsShooting)
 		{
-			AnimInstance->Montage_Play(FireGunMontage);
+			if(bIsAiming)
+			{
+				AnimInstance->Montage_Play(FireGunAimMontage);
+			}
+			else
+			{
+				AnimInstance->Montage_Play(FireGunHipMontage);
+			}
+			
 			Gun->FireGun();
 			CurrentAmmo = Gun->GetCurrentAmmo();
 		}
 		return true;
+	}
+	else
+	{
+		ReloadGun();
 	}
 
 	return false;
@@ -47,6 +58,16 @@ void ATW_BaseCharacter::SetTagVisibility(bool Visibility, FRotator ShotDirection
 	DeadEyeMarkerMesh->SetWorldRotation(ShotDirection);
 	DeadEyeMarkerMesh->SetWorldLocation(TagLocation);
 	DeadEyeMarkerMesh->SetVisibility(Visibility);
+}
+
+void ATW_BaseCharacter::SetShootingFlag(bool ShootingFlag)
+{
+	bIsShooting = ShootingFlag;
+
+	if(CurrentAmmo == 0)
+	{
+		ReloadGun();
+	}
 }
 
 void ATW_BaseCharacter::BeginPlay()
@@ -63,7 +84,6 @@ void ATW_BaseCharacter::BeginPlay()
 			Gun->InitializeGun();
 			CurrentAmmo = Gun->GetAmmoLoadingCapacity();
 			MaxAmmo = Gun->GetTotalAmmo();
-			Gun->ReloadGun.AddDynamic(this, &ATW_BaseCharacter::ReloadGun);
 		}
 	}
 
@@ -81,23 +101,20 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	return DamageTaken;
 }
 
-void ATW_BaseCharacter::ReloadGun(float ReloadTime)
+void ATW_BaseCharacter::ReloadGun()
 {
-	if(!bReloadingGun && Gun->GetTotalAmmo() != 0)
+	if(!bIsReloading && Gun->GetTotalAmmo() != 0 && CurrentAmmo != Gun->GetLoadingCapacity())
 	{
 		Gun->RefillAmmo();
 		if(AnimInstance)
 		{
 			AnimInstance->Montage_Play(ReloadGunMontage);
-			GetWorldTimerManager().SetTimer(ReloadTimer, this, &ATW_BaseCharacter::FinishedReloading, ReloadTime, false);
-			bReloadingGun = true;
 		}
 	}
 }
 
-void ATW_BaseCharacter::FinishedReloading()
+void ATW_BaseCharacter::FillAmmo()
 {
-	bReloadingGun = false;
 	CurrentAmmo = Gun->GetCurrentAmmo();
 }
 

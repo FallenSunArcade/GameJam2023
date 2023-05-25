@@ -97,11 +97,6 @@ void ATW_Gun::InitializeGun()
 void ATW_Gun::StopMuzzleFlash()
 {
 	MuzzleFlash->Deactivate();
-	
-	if(CurrentAmmo == 0)
-	{
-		ReloadGun.Broadcast(ReloadTime);
-	}
 }
 
 void ATW_Gun::BeginPlay()

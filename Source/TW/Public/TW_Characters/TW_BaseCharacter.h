@@ -12,7 +12,7 @@ class UStaticMeshComponent;
 class UAnimMontage;
 class UNiagaraComponent;
 class UAnimInstance;
-class UDecalComponent;
+class USoundBase;
 
 UCLASS()
 class TW_API ATW_BaseCharacter : public ACharacter
@@ -29,18 +29,20 @@ public:
 	void SetTagVisibility(bool Visibility, FRotator ShotDirection = FRotator::ZeroRotator, float TagHeight = 0.f);
 
 	bool IsTagged() const {return bTaggedVisible;}
+
+	void SetShootingFlag(bool ShootingFlag);
+
+	void SetReloadingFlag(bool ReloadingFlag) { bIsReloading = ReloadingFlag; }
+
+	virtual void FillAmmo();
 	
 protected:
 	virtual void BeginPlay() override;
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
-	UFUNCTION()
-	void ReloadGun(float ReloadTime);
+	void ReloadGun();
 
-	UFUNCTION()
-	void FinishedReloading();
-	
 	UPROPERTY(EditAnywhere, Category = Gun)
 	TSubclassOf<ATW_Gun> GunClass;
 
@@ -66,7 +68,10 @@ protected:
 	UStaticMeshComponent* HatMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Montages")
-	UAnimMontage* FireGunMontage;
+	UAnimMontage* FireGunHipMontage;
+
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	UAnimMontage* FireGunAimMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* ReloadGunMontage;
@@ -76,12 +81,12 @@ protected:
 
 	UPROPERTY()
 	UAnimInstance* AnimInstance;
+
+	bool bIsShooting = false;
 	
-	bool bReloadingGun = false;
+	bool bIsReloading = false;
 
 	bool bIsAiming = false;
 
 	bool bTaggedVisible = false;
-	
-	FTimerHandle ReloadTimer;
 };

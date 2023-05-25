@@ -42,6 +42,8 @@ public:
 
 	void DeadEye(const FInputActionValue& Value);
 
+	void Reload(const FInputActionValue& Value);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void GunWasFired(int32 CurrentGunsAmmo);
 
@@ -89,12 +91,11 @@ protected:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+	virtual void FillAmmo() override;
+	
 	UFUNCTION()
 	void UpdateDeadEyeMeter();
 
-	UFUNCTION()
-	void UpdateHudAmmo();
-	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -128,11 +129,12 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DeadEyeAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ReloadAction;
 	
 	FTimerHandle UpdateDeadEyeMeterHandle;
-
-	FTimerHandle UpdateAmmoHandle;
-
+	
 	bool bDeadEyeInProgress = false;
 
 	UPROPERTY()

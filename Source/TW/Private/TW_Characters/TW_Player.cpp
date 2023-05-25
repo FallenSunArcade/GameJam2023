@@ -67,6 +67,12 @@ float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	return DamageTaken;
 }
 
+void ATW_Player::FillAmmo()
+{
+	Super::FillAmmo();
+	GunFired.Broadcast(Gun->GetCurrentAmmo());
+}
+
 void ATW_Player::UpdateDeadEyeMeter()
 {
 	if(bDeadEyeInProgress)
@@ -97,12 +103,6 @@ void ATW_Player::UpdateDeadEyeMeter()
 	}
 }
 
-void ATW_Player::UpdateHudAmmo()
-{
-	GunFired.Broadcast(Gun->GetCurrentAmmo());
-}
-
-
 void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
@@ -115,6 +115,7 @@ void ATW_Player::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent
 		EnhancedInputComponent->BindAction(StartAimAction, ETriggerEvent::Triggered, this, &ATW_Player::StartAiming);
 		EnhancedInputComponent->BindAction(StopAimAction, ETriggerEvent::Triggered, this, &ATW_Player::StopAiming);
 		EnhancedInputComponent->BindAction(DeadEyeAction, ETriggerEvent::Triggered, this, &ATW_Player::DeadEye);
+		EnhancedInputComponent->BindAction(ReloadAction, ETriggerEvent::Triggered, this, &ATW_Player::Reload);
 	}
 }
 
@@ -154,12 +155,6 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 		{
 			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootingCameraShakeClass);
 		}
-	}
-
-	if(Gun->GetCurrentAmmo() == 0)
-	{
-		GetWorldTimerManager().SetTimer(UpdateAmmoHandle, this, &ATW_Player::UpdateHudAmmo,
-			Gun->GetReloadTime(), false);
 	}
 }
 
@@ -201,6 +196,11 @@ void ATW_Player::DeadEye(const FInputActionValue& Value)
 		bDeadEyeInProgress = false;
 		EndDeadEye.Broadcast(CurrentDeadEyeTime);
 	}
+}
+
+void ATW_Player::Reload(const FInputActionValue& Value)
+{
+	ReloadGun();
 }
 
 

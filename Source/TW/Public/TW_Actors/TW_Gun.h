@@ -6,8 +6,6 @@
 #include "GameFramework/Actor.h"
 #include "TW_Gun.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FReloadDelegate, float, GunReloadTime);
-
 class UStaticMeshComponent;
 class APawn;
 class AController;
@@ -28,7 +26,8 @@ public:
 	
 	FORCEINLINE int32 GetCurrentAmmo() const {return CurrentAmmo;}
 
-	FORCEINLINE float GetReloadTime() const {return ReloadTime;}
+	FORCEINLINE int32 GetLoadingCapacity() const {return AmmoLoadingCapacity;}
+	
 
 	void RefillAmmo();
 	
@@ -38,9 +37,6 @@ public:
 
 	UFUNCTION()
 	void StopMuzzleFlash();
-	
-	UPROPERTY()
-	FReloadDelegate ReloadGun;
 
 protected:
 	virtual void BeginPlay() override;
@@ -57,9 +53,6 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Gun")
 	float Damage = 10.f;
-
-	UPROPERTY(EditAnywhere, Category = "Gun")
-	float ReloadTime = 2.f;
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 TotalAmmo = 150;
