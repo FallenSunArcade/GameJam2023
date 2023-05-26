@@ -149,6 +149,7 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 {
 	if(FireGun())
 	{
+		UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, Gun->GetTotalAmmo(), *GetName());
 		GunFired.Broadcast(CurrentAmmo, Gun->GetTotalAmmo());
 		
 		if(ShootingCameraShakeClass)

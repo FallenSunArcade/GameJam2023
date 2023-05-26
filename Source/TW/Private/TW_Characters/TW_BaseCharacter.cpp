@@ -42,11 +42,8 @@ bool ATW_BaseCharacter::FireGun()
 		}
 		return true;
 	}
-	else
-	{
-		ReloadGun();
-	}
 
+	ReloadGun();
 	return false;
 }
 

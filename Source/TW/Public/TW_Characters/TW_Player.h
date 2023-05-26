@@ -46,7 +46,7 @@ public:
 	void Reload(const FInputActionValue& Value);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void GunWasFired(int32 CurrentGunsAmmo, int32 TotalGunAmmo);
+	void UpdateAmmo(int32 CurrentGunsAmmo, int32 TotalGunAmmo);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayerWasDamaged(int32 PlayersCurrentHealth);
