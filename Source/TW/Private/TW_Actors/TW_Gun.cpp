@@ -17,6 +17,8 @@ ATW_Gun::ATW_Gun()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	GunMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Gun Mesh"));
 	GunMesh->SetupAttachment(RootComponent);
+	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
+	ProjectileSpawnPoint->SetupAttachment(GunMesh);
 	MuzzleFlash = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Muzzle Flash"));
 	MuzzleFlash->SetupAttachment(GunMesh);
 }

@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "UI/TW_Hud.h"
+#include "TW_UI/TW_Hud.h"
 #include "Kismet/GameplayStatics.h"
 #include "TW_Characters/TW_BaseCharacter.h"
 

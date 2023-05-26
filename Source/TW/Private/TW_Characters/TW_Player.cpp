@@ -10,7 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "TW_Actors/TW_Gun.h"
-#include "UI/TW_Hud.h"
+#include "TW_UI/TW_Hud.h"
 
 
 ATW_Player::ATW_Player()

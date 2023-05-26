@@ -46,6 +46,9 @@ private:
 	UStaticMeshComponent* GunMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Gun")
+	USceneComponent* ProjectileSpawnPoint;
+
+	UPROPERTY(EditAnywhere, Category = "Gun")
 	UNiagaraComponent* MuzzleFlash;
 	
 	UPROPERTY(EditAnywhere, Category = "Gun")

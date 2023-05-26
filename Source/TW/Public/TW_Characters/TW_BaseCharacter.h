@@ -60,10 +60,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Player Stats")
 	int32 CurrentHealth = 0;
-
-	UPROPERTY(EditAnywhere, Category = "Player Stats")
-	UNiagaraComponent* BloodImpact;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hat")
 	UStaticMeshComponent* HatMesh;
 

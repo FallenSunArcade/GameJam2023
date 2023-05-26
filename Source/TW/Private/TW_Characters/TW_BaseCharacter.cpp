@@ -98,6 +98,7 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	CurrentHealth -= DamageTaken;
 	CurrentHealth = FMath::Clamp(CurrentHealth, 0.f, MaxHealth);
 
+	
 	return DamageTaken;
 }
 
