@@ -47,7 +47,7 @@ void ATW_Player::BeginPlay()
 		}
 	}
 	
-	GunFired.AddDynamic(this, &ATW_Player::GunWasFired);
+	GunFired.AddDynamic(this, &ATW_Player::UpdateAmmo);
 	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
 	StartDeadEye.AddDynamic(this, &ATW_Player::DeadEyeInProgress);
 	EndDeadEye.AddDynamic(this, &ATW_Player::DeadEyeEnded);
