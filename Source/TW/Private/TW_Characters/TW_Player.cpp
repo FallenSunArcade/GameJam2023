@@ -47,7 +47,7 @@ void ATW_Player::BeginPlay()
 		}
 	}
 	
-	GunFired.AddDynamic(this, &ATW_Player::UpdateAmmo);
+	UpdateAmmoDelegate.AddDynamic(this, &ATW_Player::UpdateAmmo);
 	PlayerDamaged.AddDynamic(this, &ATW_Player::PlayerWasDamaged);
 	StartDeadEye.AddDynamic(this, &ATW_Player::DeadEyeInProgress);
 	EndDeadEye.AddDynamic(this, &ATW_Player::DeadEyeEnded);
@@ -70,7 +70,8 @@ float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 void ATW_Player::FillAmmo()
 {
 	Super::FillAmmo();
-	GunFired.Broadcast(Gun->GetCurrentAmmo(), Gun->GetTotalAmmo());
+	UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
+	UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, TotalAmmo, *GetName());
 }
 
 void ATW_Player::UpdateDeadEyeMeter()
@@ -149,8 +150,8 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 {
 	if(FireGun())
 	{
-		UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, Gun->GetTotalAmmo(), *GetName());
-		GunFired.Broadcast(CurrentAmmo, Gun->GetTotalAmmo());
+		UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, TotalAmmo, *GetName());
+		UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
 		
 		if(ShootingCameraShakeClass)
 		{

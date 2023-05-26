@@ -50,7 +50,7 @@ protected:
 	ATW_Gun* Gun = nullptr;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun)
-	int32 MaxAmmo = 0;
+	int32 TotalAmmo = 0;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gun)
 	int32 CurrentAmmo = 0;

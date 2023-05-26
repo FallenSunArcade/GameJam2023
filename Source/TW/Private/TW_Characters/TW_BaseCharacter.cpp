@@ -43,7 +43,7 @@ bool ATW_BaseCharacter::FireGun()
 		return true;
 	}
 
-	ReloadGun();
+	//ReloadGun();
 	return false;
 }
 
@@ -80,7 +80,7 @@ void ATW_BaseCharacter::BeginPlay()
 			Gun->SetOwner(this);
 			Gun->InitializeGun();
 			CurrentAmmo = Gun->GetAmmoLoadingCapacity();
-			MaxAmmo = Gun->GetTotalAmmo();
+			TotalAmmo = Gun->GetTotalAmmo();
 		}
 	}
 
@@ -103,6 +103,7 @@ void ATW_BaseCharacter::ReloadGun()
 {
 	if(!bIsReloading && Gun->GetTotalAmmo() != 0 && CurrentAmmo != Gun->GetLoadingCapacity())
 	{
+		bIsReloading = true;
 		Gun->RefillAmmo();
 		if(AnimInstance)
 		{
@@ -114,5 +115,6 @@ void ATW_BaseCharacter::ReloadGun()
 void ATW_BaseCharacter::FillAmmo()
 {
 	CurrentAmmo = Gun->GetCurrentAmmo();
+	TotalAmmo = Gun->GetTotalAmmo();
 }
 

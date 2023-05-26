@@ -8,7 +8,7 @@
 #include "TW_Player.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGunFiredDelegate, int32, CurrentGunsAmmo, int32, TotalGunAmmo);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FUpdateAmmoDelegate, int32, CurrentGunsAmmo, int32, TotalGunAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDamagedDelegate, int32, CurrentPlayerHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeadEyeStartDelegate, int32, CurrentTime);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeadEyeEndDelegate, int32, CurrentTime);
@@ -65,7 +65,7 @@ public:
 	FORCEINLINE UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	UPROPERTY(BlueprintAssignable)
-	FGunFiredDelegate GunFired;
+	FUpdateAmmoDelegate UpdateAmmoDelegate;
 
 	UPROPERTY(BlueprintAssignable)
 	FPlayerDamagedDelegate PlayerDamaged;
