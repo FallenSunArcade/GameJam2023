@@ -70,7 +70,7 @@ float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 void ATW_Player::FillAmmo()
 {
 	Super::FillAmmo();
-	GunFired.Broadcast(Gun->GetCurrentAmmo());
+	GunFired.Broadcast(Gun->GetCurrentAmmo(), Gun->GetTotalAmmo());
 }
 
 void ATW_Player::UpdateDeadEyeMeter()
@@ -149,7 +149,7 @@ void ATW_Player::Shoot(const FInputActionValue& Value)
 {
 	if(FireGun())
 	{
-		GunFired.Broadcast(CurrentAmmo);
+		GunFired.Broadcast(CurrentAmmo, Gun->GetTotalAmmo());
 		
 		if(ShootingCameraShakeClass)
 		{

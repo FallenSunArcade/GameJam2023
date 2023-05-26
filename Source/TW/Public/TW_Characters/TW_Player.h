@@ -7,7 +7,8 @@
 #include "TW_BaseCharacter.h"
 #include "TW_Player.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGunFiredDelegate, int32, CurrentGunsAmmo);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGunFiredDelegate, int32, CurrentGunsAmmo, int32, TotalGunAmmo);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPlayerDamagedDelegate, int32, CurrentPlayerHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeadEyeStartDelegate, int32, CurrentTime);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDeadEyeEndDelegate, int32, CurrentTime);
@@ -45,7 +46,7 @@ public:
 	void Reload(const FInputActionValue& Value);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void GunWasFired(int32 CurrentGunsAmmo);
+	void GunWasFired(int32 CurrentGunsAmmo, int32 TotalGunAmmo);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void PlayerWasDamaged(int32 PlayersCurrentHealth);
