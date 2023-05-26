@@ -24,26 +24,22 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 bool ATW_BaseCharacter::FireGun()
 {
 	
-	if(CurrentAmmo > 0 && !bIsReloading)
+	if(CurrentAmmo > 0 && !bIsReloading && Gun && AnimInstance && !bIsShooting)
 	{
-		if(Gun && AnimInstance && !bIsShooting)
+		if(bIsAiming)
 		{
-			if(bIsAiming)
-			{
-				AnimInstance->Montage_Play(FireGunAimMontage);
-			}
-			else
-			{
-				AnimInstance->Montage_Play(FireGunHipMontage);
-			}
-			
-			Gun->FireGun();
-			CurrentAmmo = Gun->GetCurrentAmmo();
+			AnimInstance->Montage_Play(FireGunAimMontage);
 		}
+		else
+		{
+			AnimInstance->Montage_Play(FireGunHipMontage);
+		}
+			
+		Gun->FireGun();
+		CurrentAmmo = Gun->GetCurrentAmmo();
+		
 		return true;
 	}
-
-	//ReloadGun();
 	return false;
 }
 
