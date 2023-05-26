@@ -11,6 +11,7 @@ class APawn;
 class AController;
 class UNiagaraComponent;
 class USoundBase;
+class ATW_Projectile;
 
 UCLASS()
 class TW_API ATW_Gun : public AActor
@@ -53,9 +54,12 @@ private:
 	
 	UPROPERTY(EditAnywhere, Category = "Gun")
 	USoundBase* GunShootingSound;
-
+	
 	UPROPERTY(EditAnywhere, Category = "Gun")
 	float Damage = 10.f;
+
+	UPROPERTY(EditAnywhere, Category = "Ammo")
+	TSubclassOf<ATW_Projectile> ProjectileClass;
 	
 	UPROPERTY(EditAnywhere, Category = "Ammo")
 	int32 TotalAmmo = 150;

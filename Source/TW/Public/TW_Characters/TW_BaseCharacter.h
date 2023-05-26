@@ -10,7 +10,7 @@
 class ATW_Gun;
 class UStaticMeshComponent;
 class UAnimMontage;
-class UNiagaraComponent;
+class UNiagaraSystem;
 class UAnimInstance;
 class USoundBase;
 
@@ -42,6 +42,8 @@ protected:
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	void ReloadGun();
+
+	virtual void DestroyCharacter();
 
 	UPROPERTY(EditAnywhere, Category = Gun)
 	TSubclassOf<ATW_Gun> GunClass;
@@ -75,7 +77,16 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "DeadEyeMarker")
 	UStaticMeshComponent* DeadEyeMarkerMesh;
+	
+	UPROPERTY(EditAnywhere, Category = "Damage")
+	UNiagaraSystem* BloodSplat;
 
+	UPROPERTY(EditAnywhere, Category = "Damage")
+	USoundBase* GruntSound;
+
+	UPROPERTY(EditAnywhere, Category = "Damage")
+	USoundBase* BulletHitNoiseSound;
+	
 	UPROPERTY()
 	UAnimInstance* AnimInstance;
 
@@ -86,4 +97,6 @@ protected:
 	bool bIsAiming = false;
 
 	bool bTaggedVisible = false;
+
+	FTimerHandle DeathTimer;
 };

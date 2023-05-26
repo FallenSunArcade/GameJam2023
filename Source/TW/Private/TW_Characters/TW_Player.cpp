@@ -164,7 +164,7 @@ void ATW_Player::StartAiming(const FInputActionValue& Value)
 {
 	PlayerAiming.Broadcast(true);
 	bIsAiming = true;
-	CameraBoom->TargetArmLength = 150;
+	CameraBoom->TargetArmLength = 100;
 }
 
 void ATW_Player::StopAiming(const FInputActionValue& Value)

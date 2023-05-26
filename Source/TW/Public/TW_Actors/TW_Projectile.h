@@ -7,6 +7,10 @@
 #include "TW_Projectile.generated.h"
 
 class UBoxComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
+class UProjectileMovementComponent;
+class USoundCue;
 
 UCLASS()
 class TW_API ATW_Projectile : public AActor
@@ -14,14 +18,38 @@ class TW_API ATW_Projectile : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
 	ATW_Projectile();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void Destroyed() override;
+
+	void StartDestroyTimer();
+
+	void DestroyTimerFinished();
+
+	UFUNCTION()
+	virtual void OnHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+private:
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	UBoxComponent* Projectile;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	UNiagaraComponent* SmokeTrail;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	UNiagaraSystem* ProjectileImpact;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	USoundCue* ImpactSound;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile")
+	float Damage = 10.f;
+
+	FTimerHandle DestroyTimer;
 };

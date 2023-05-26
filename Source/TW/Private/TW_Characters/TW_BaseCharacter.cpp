@@ -2,10 +2,14 @@
 
 
 #include "TW_Characters/TW_BaseCharacter.h"
+
+#include "NiagaraFunctionLibrary.h"
 #include "TW_Actors/TW_Gun.h"
 #include "Components/CapsuleComponent.h"
 #include "Animation/AnimMontage.h"
 #include "Engine/DamageEvents.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 ATW_BaseCharacter::ATW_BaseCharacter()
 {
@@ -91,6 +95,34 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	CurrentHealth -= DamageTaken;
 	CurrentHealth = FMath::Clamp(CurrentHealth, 0.f, MaxHealth);
 
+	if(BloodSplat)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BloodSplat, DamageCauser->GetActorLocation(), DamageCauser->GetActorRotation());
+	}
+
+	if(GruntSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, GruntSound, GetActorLocation());
+	}
+
+	if(BulletHitNoiseSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, BulletHitNoiseSound, GetActorLocation());
+	}
+
+	if(CurrentHealth == 0)
+	{
+		GetMesh()->SetSimulatePhysics(true);
+		GetCharacterMovement()->DisableMovement();
+		
+		GetWorldTimerManager().SetTimer(
+			DeathTimer,
+			this,
+			&ATW_BaseCharacter::DestroyCharacter,
+			2.f
+			);
+	}
+
 	
 	return DamageTaken;
 }
@@ -106,6 +138,12 @@ void ATW_BaseCharacter::ReloadGun()
 			AnimInstance->Montage_Play(ReloadGunMontage);
 		}
 	}
+}
+
+void ATW_BaseCharacter::DestroyCharacter()
+{
+	Gun->Destroy();
+	Destroy();
 }
 
 void ATW_BaseCharacter::FillAmmo()

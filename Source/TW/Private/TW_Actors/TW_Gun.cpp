@@ -8,6 +8,7 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/DamageEvents.h"
 #include "NiagaraComponent.h"
+#include "TW_Actors/TW_Projectile.h"
 
 
 ATW_Gun::ATW_Gun()
@@ -53,10 +54,11 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 	MuzzleFlash->Activate(true);
 
 	UGameplayStatics::PlaySoundAtLocation(this, GunShootingSound, GetActorLocation());
-	
+
+
 	FVector Location;
 	FRotator Rotation;
-
+	
 	if(ManualFireGun)
 	{
 		Location = ManualLocation;
@@ -66,26 +68,32 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 	{
 		GunOwnerController->GetPlayerViewPoint(Location, Rotation);
 	}
-	FVector ShotDirection;
-	ShotDirection = -Rotation.Vector();
-	FVector End = Location + Rotation.Vector() * 10000;
 	
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	Params.AddIgnoredActor(GetOwner());
-	FHitResult Hit;
+	GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass, Location + Rotation.Vector() * 100,
+		Rotation);
+	
+	
 
-	if(GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params))
-	{
-		DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, false, 1.0);
-		AActor* HitActor = Hit.GetActor();
-		if (HitActor != nullptr)
-		{
-			FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
-			HitActor->TakeDamage(Damage, DamageEvent, GunOwnerController, this);
-		}
-
-	}
+	// FVector ShotDirection;
+	// ShotDirection = -Rotation.Vector();
+	// FVector End = Location + Rotation.Vector() * 10000;
+	//
+	// FCollisionQueryParams Params;
+	// Params.AddIgnoredActor(this);
+	// Params.AddIgnoredActor(GetOwner());
+	// FHitResult Hit;
+	//
+	// if(GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params))
+	// {
+	// 	DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, false, 1.0);
+	// 	AActor* HitActor = Hit.GetActor();
+	// 	if (HitActor != nullptr)
+	// 	{
+	// 		FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
+	// 		HitActor->TakeDamage(Damage, DamageEvent, GunOwnerController, this);
+	// 	}
+	//
+	// }
 }
 
 void ATW_Gun::InitializeGun()
