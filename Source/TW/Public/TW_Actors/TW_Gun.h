@@ -33,8 +33,8 @@ public:
 	void RefillAmmo();
 	
 	void FireGun(FVector ManualLocation = FVector::Zero(), FRotator ManualRotation = FRotator::ZeroRotator, bool ManualFireGun = false);
-
-	void InitializeGun();
+	
+	void LoadingGun();
 
 	UFUNCTION()
 	void StopMuzzleFlash();
@@ -80,4 +80,6 @@ private:
 	AController* GunOwnerController;
 	
 	FTimerHandle MuzzleFlashTimer;
+
+	FTimerHandle LoadGunTimer;
 };
