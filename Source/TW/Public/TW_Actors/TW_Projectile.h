@@ -49,7 +49,7 @@ private:
 	USoundCue* ImpactSound;
 
 	UPROPERTY(EditAnywhere, Category = "Projectile")
-	float Damage = 10.f;
+	float Damage = 25.f;
 
 	FTimerHandle DestroyTimer;
 };

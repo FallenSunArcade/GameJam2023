@@ -85,6 +85,8 @@ void ATW_BaseCharacter::BeginPlay()
 	}
 
 	AnimInstance = GetMesh()->GetAnimInstance();
+
+	OnDeathDelegate.AddDynamic(this, &ATW_BaseCharacter::OnDeath);
 }
 
 float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
@@ -112,6 +114,8 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 
 	if(CurrentHealth == 0)
 	{
+		OnDeathDelegate.Broadcast();
+		
 		GetMesh()->SetSimulatePhysics(true);
 		GetCharacterMovement()->DisableMovement();
 		

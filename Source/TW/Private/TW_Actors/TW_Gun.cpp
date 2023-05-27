@@ -69,7 +69,7 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 		GunOwnerController->GetPlayerViewPoint(Location, Rotation);
 	}
 	
-	GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass, Location + Rotation.Vector() * 100,
+	GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass, Location + Rotation.Vector() * 200,
 		Rotation);
 	
 	

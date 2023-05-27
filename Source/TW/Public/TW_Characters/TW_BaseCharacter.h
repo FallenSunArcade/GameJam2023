@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "TW_BaseCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnDeathDelegate);
 
 class ATW_Gun;
 class UStaticMeshComponent;
@@ -35,6 +36,12 @@ public:
 	void SetReloadingFlag(bool ReloadingFlag) { bIsReloading = ReloadingFlag; }
 
 	virtual void FillAmmo();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnDeath();
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnDeathDelegate OnDeathDelegate;
 	
 protected:
 	virtual void BeginPlay() override;
