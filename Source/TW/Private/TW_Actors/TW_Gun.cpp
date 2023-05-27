@@ -61,10 +61,11 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 	
 	if(ManualFireGun)
 	{
-		AActor* ThisGunsOwner = GetOwner();
-		//GunOwnerController->GetPlayerViewPoint(Location, Rotation);
-		Location = ThisGunsOwner->GetActorLocation();
-		Rotation = (ManualLocation - Location).Rotation();
+		if(const AActor* ThisGunsOwner = GetOwner())
+		{
+			Location = ThisGunsOwner->GetActorLocation();
+			Rotation = (ManualLocation - Location).Rotation();
+		}
 	}
 	else
 	{
