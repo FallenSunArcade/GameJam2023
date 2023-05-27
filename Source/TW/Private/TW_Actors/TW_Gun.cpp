@@ -96,12 +96,15 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 	// }
 }
 
-void ATW_Gun::InitializeGun()
+void ATW_Gun::LoadingGun()
 {
 	GunOwner = Cast<APawn>(GetOwner());
-	check(GunOwner);
 	GunOwnerController = GunOwner->GetController();
-	check(GunOwnerController);
+		
+	if(GunOwner && GunOwnerController)
+	{
+		GetWorldTimerManager().ClearTimer(LoadGunTimer);
+	}
 }
 
 void ATW_Gun::StopMuzzleFlash()
@@ -112,6 +115,7 @@ void ATW_Gun::StopMuzzleFlash()
 void ATW_Gun::BeginPlay()
 {
 	Super::BeginPlay();
+	GetWorldTimerManager().SetTimer(LoadGunTimer, this, &ATW_Gun::LoadingGun, 0.1f, true);
 }
 
 

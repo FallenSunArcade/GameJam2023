@@ -78,7 +78,6 @@ void ATW_BaseCharacter::BeginPlay()
 		{
 			Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponSocket"));
 			Gun->SetOwner(this);
-			Gun->InitializeGun();
 			CurrentAmmo = Gun->GetAmmoLoadingCapacity();
 			TotalAmmo = Gun->GetTotalAmmo();
 		}

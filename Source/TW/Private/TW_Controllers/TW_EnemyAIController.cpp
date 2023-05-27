@@ -18,4 +18,6 @@ void ATW_EnemyAIController::BeginPlay()
 	{
 		RunBehaviorTree(BehaviorTree);
 	}
+
+	check(BehaviorTree);
 }
