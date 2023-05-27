@@ -48,6 +48,8 @@ protected:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+	virtual void ChangeHealth(int32 HealthValue);
+
 	void ReloadGun();
 
 	virtual void DestroyCharacter();

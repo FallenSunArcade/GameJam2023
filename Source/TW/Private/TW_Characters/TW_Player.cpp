@@ -69,6 +69,14 @@ float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent
 	return DamageTaken;
 }
 
+void ATW_Player::ChangeHealth(int32 HealthValue)
+{
+	Super::ChangeHealth(HealthValue);
+
+	UE_LOG(LogTemp, Display, TEXT("Healing %d (%s)"), CurrentHealth, *GetName());
+	PlayerDamaged.Broadcast(CurrentHealth);
+}
+
 void ATW_Player::FillAmmo()
 {
 	Super::FillAmmo();

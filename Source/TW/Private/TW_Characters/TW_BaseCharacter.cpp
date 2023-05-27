@@ -130,6 +130,12 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 	return DamageTaken;
 }
 
+void ATW_BaseCharacter::ChangeHealth(int32 HealthValue)
+{
+	CurrentHealth += HealthValue;
+	CurrentHealth = FMath::Clamp(CurrentHealth, 0, MaxHealth);
+}
+
 void ATW_BaseCharacter::ReloadGun()
 {
 	if(!bIsReloading && Gun->GetTotalAmmo() != 0 && CurrentAmmo != Gun->GetLoadingCapacity())

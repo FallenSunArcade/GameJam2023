@@ -92,6 +92,9 @@ protected:
 
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void ChangeHealth(int32 HealthValue) override;
+
 	virtual void FillAmmo() override;
 	
 	UFUNCTION()
