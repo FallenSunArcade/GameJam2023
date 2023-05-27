@@ -77,6 +77,14 @@ void ATW_Player::ChangeHealth(int32 HealthValue)
 	PlayerDamaged.Broadcast(CurrentHealth);
 }
 
+void ATW_Player::ChangeAmmo(int32 AmmoValue)
+{
+	Super::ChangeAmmo(AmmoValue);
+
+	UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
+	UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, TotalAmmo, *GetName());
+}
+
 void ATW_Player::FillAmmo()
 {
 	Super::FillAmmo();

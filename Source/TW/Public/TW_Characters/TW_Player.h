@@ -95,6 +95,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void ChangeHealth(int32 HealthValue) override;
 
+	UFUNCTION(BlueprintCallable)
+	virtual void ChangeAmmo(int32 AmmoValue) override;
+
 	virtual void FillAmmo() override;
 	
 	UFUNCTION()

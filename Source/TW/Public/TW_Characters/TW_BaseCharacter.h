@@ -50,6 +50,8 @@ protected:
 
 	virtual void ChangeHealth(int32 HealthValue);
 
+	virtual void ChangeAmmo(int32 AmmoValue);
+
 	void ReloadGun();
 
 	virtual void DestroyCharacter();
