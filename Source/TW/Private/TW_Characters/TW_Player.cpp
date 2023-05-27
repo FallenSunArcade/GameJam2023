@@ -11,10 +11,12 @@
 #include "EnhancedInputSubsystems.h"
 #include "TW_Actors/TW_Gun.h"
 #include "TW_UI/TW_Hud.h"
+#include "TW_ToolBox/TW_LogCategories.h"
 
 
 ATW_Player::ATW_Player()
 {
+	PrimaryActorTick.bCanEverTick = true;
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
 	//GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
@@ -40,7 +42,6 @@ void ATW_Player::BeginPlay()
 	
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		Hud = Cast<ATW_Hud>(PlayerController->GetHUD());
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
@@ -58,13 +59,45 @@ void ATW_Player::BeginPlay()
 	GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
 }
 
+void ATW_Player::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if(bDeadEyeInProgress && DeadEyeTargets.Num() < CurrentAmmo)
+	{
+		FVector Location;
+		FRotator Rotation;
+		GetController()->GetPlayerViewPoint(Location, Rotation);
+		FVector End = Location + Rotation.Vector() * 10000;
+	
+		FCollisionQueryParams Params;
+		Params.AddIgnoredActor(this);
+	
+		FHitResult Hit;
+		if(GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params))
+		{
+			ATW_BaseCharacter* BaseCharacter = Cast<ATW_BaseCharacter>(Hit.GetActor());
+			if (BaseCharacter != nullptr)
+			{
+				if(!BaseCharacter->IsTagged())
+				{
+					DeadEyeTargets.Emplace(BaseCharacter);
+					UE_LOG(LogDeadeye, Display, TEXT("(%s %s)"), *BaseCharacter->GetName(), *GetName());
+					UE_LOG(LogDeadeye, Display, TEXT("(DeadEyeTargets.Num() = %i %s)"), DeadEyeTargets.Num(), *GetName());
+					FVector TargetLocation = GetActorLocation() - BaseCharacter->GetActorLocation();
+					BaseCharacter->SetTagVisibility(true, TargetLocation.Rotation(), Hit.Location.Z);
+				}
+			}
+		}
+	}
+}
+
 float ATW_Player::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
-	AActor* DamageCauser)
+                             AActor* DamageCauser)
 {
 	const float DamageTaken = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	UE_LOG(LogTemp, Display, TEXT("Taking Damage %d (%s)"), CurrentHealth, *GetName());
-	PlayerDamaged.Broadcast(CurrentHealth);
+	PlayerDamaged.Broadcast(CurrentHealth); 
 
 	return DamageTaken;
 }
@@ -92,6 +125,37 @@ void ATW_Player::FillAmmo()
 	UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, TotalAmmo, *GetName());
 }
 
+void ATW_Player::SetShootingFlag(bool ShootingFlag)
+{
+	Super::SetShootingFlag(ShootingFlag);
+
+	if(!ShootingFlag && bShootingDeadEyeTargets) 
+	{
+		UE_LOG(LogDeadeye, Display, TEXT("( SetShootingFlag %s)"), *GetName());
+		ShootDeadEyeTargets();
+	}
+}
+
+void ATW_Player::ShootDeadEyeTargets()
+{
+	if(DeadEyeIndex < DeadEyeTargets.Num() && !DeadEyeTargets.IsEmpty())
+	{
+		UE_LOG(LogDeadeye, Display, TEXT("(DeadEyeIndex = %i %s)"), DeadEyeIndex, *GetName());
+		ATW_BaseCharacter* CurrentTarget = DeadEyeTargets[DeadEyeIndex];
+		++DeadEyeIndex;
+		UE_LOG(LogDeadeye, Display, TEXT("(DeadEyeTargets.Num() = %i %s)"), DeadEyeTargets.Num(), *GetName());
+		FireGun(CurrentTarget->GetTagLocation(), CurrentTarget->GetTagRotation(), true);
+		CurrentTarget->SetTagVisibility(false);
+		
+	}
+	else
+	{
+		DeadEyeTargets.Empty();
+		bShootingDeadEyeTargets = false;
+		DeadEyeIndex = 0;
+	}
+}
+
 void ATW_Player::UpdateDeadEyeMeter()
 {
 	if(bDeadEyeInProgress)
@@ -104,14 +168,21 @@ void ATW_Player::UpdateDeadEyeMeter()
 		}
 		else
 		{
-			if(Hud)
+			if(!DeadEyeTargets.IsEmpty())
 			{
-				Hud->SetDeadEye(false);
-			}		
-
+				if(!bShootingDeadEyeTargets)
+				{
+					bShootingDeadEyeTargets = true;
+					ShootDeadEyeTargets();
+				}
+			}
+			else
+			{
+				bDeadEyeInProgress = false;
+			}
+		
 			GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 			EndDeadEye.Broadcast(CurrentDeadEyeTime);
-			bDeadEyeInProgress = false;
 		}
 	}
 	else
@@ -166,14 +237,29 @@ void ATW_Player::Look(const FInputActionValue& Value)
 
 void ATW_Player::Shoot(const FInputActionValue& Value)
 {
-	if(FireGun())
+	if(bDeadEyeInProgress)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, TotalAmmo, *GetName());
-		UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
-		
-		if(ShootingCameraShakeClass)
+		if(!DeadEyeTargets.IsEmpty())
 		{
-			GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootingCameraShakeClass);
+			bShootingDeadEyeTargets = true;
+			ShootDeadEyeTargets();
+		}
+		else
+		{
+			bDeadEyeInProgress = false;
+		}
+	}
+	else
+	{
+		if(FireGun())
+		{
+			UE_LOG(LogTemp, Display, TEXT("Ammo %i %i (%s)"), CurrentAmmo, TotalAmmo, *GetName());
+			UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
+		
+			if(ShootingCameraShakeClass)
+			{
+				GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(ShootingCameraShakeClass);
+			}
 		}
 	}
 }
@@ -194,33 +280,32 @@ void ATW_Player::StopAiming(const FInputActionValue& Value)
 
 void ATW_Player::DeadEye(const FInputActionValue& Value)
 {
-	if(!bDeadEyeInProgress)
+	if(!bDeadEyeInProgress && CurrentDeadEyeTime > 0)
 	{
-		if(Hud)
-		{
-			Hud->SetDeadEye(true);
-		}
-		
 		bDeadEyeInProgress = true;
 		StartDeadEye.Broadcast(CurrentDeadEyeTime);
-		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 0.1f, true, 0.f);
+		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 0.1f, true, 0.1f);
 	}
 	else
 	{
-		if(Hud)
-		{
-			Hud->SetDeadEye(false);
-		}
-		
-		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 		bDeadEyeInProgress = false;
+		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 		EndDeadEye.Broadcast(CurrentDeadEyeTime);
+
+		if(!bShootingDeadEyeTargets)
+		{
+			bShootingDeadEyeTargets = true;
+			ShootDeadEyeTargets();
+		}
 	}
 }
 
 void ATW_Player::Reload(const FInputActionValue& Value)
 {
-	ReloadGun();
+	if(!bShootingDeadEyeTargets)
+	{
+		ReloadGun();
+	}
 }
 
 

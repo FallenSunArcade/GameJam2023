@@ -61,8 +61,11 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 	
 	if(ManualFireGun)
 	{
-		Location = ManualLocation;
-		Rotation = ManualRotation;
+		if(const AActor* ThisGunsOwner = GetOwner())
+		{
+			Location = ThisGunsOwner->GetActorLocation();
+			Rotation = (ManualLocation - Location).Rotation();
+		}
 	}
 	else
 	{
@@ -71,29 +74,6 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 	
 	GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass, Location + Rotation.Vector() * 200,
 		Rotation);
-	
-	
-
-	// FVector ShotDirection;
-	// ShotDirection = -Rotation.Vector();
-	// FVector End = Location + Rotation.Vector() * 10000;
-	//
-	// FCollisionQueryParams Params;
-	// Params.AddIgnoredActor(this);
-	// Params.AddIgnoredActor(GetOwner());
-	// FHitResult Hit;
-	//
-	// if(GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1, Params))
-	// {
-	// 	DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, false, 1.0);
-	// 	AActor* HitActor = Hit.GetActor();
-	// 	if (HitActor != nullptr)
-	// 	{
-	// 		FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
-	// 		HitActor->TakeDamage(Damage, DamageEvent, GunOwnerController, this);
-	// 	}
-	//
-	// }
 }
 
 void ATW_Gun::LoadingGun()
