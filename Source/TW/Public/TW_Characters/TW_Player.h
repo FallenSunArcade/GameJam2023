@@ -90,6 +90,8 @@ protected:
 	
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 	UFUNCTION(BlueprintCallable)
@@ -99,6 +101,10 @@ protected:
 	virtual void ChangeAmmo(int32 AmmoValue) override;
 
 	virtual void FillAmmo() override;
+
+	virtual void SetShootingFlag(bool ShootingFlag) override;
+
+	void ShootDeadEyeTargets();
 	
 	UFUNCTION()
 	void UpdateDeadEyeMeter();
@@ -147,7 +153,11 @@ private:
 	
 	bool bDeadEyeInProgress = false;
 
+	bool bShootingDeadEyeTargets = false;
+
 	UPROPERTY()
-	ATW_Hud* Hud;
+	TArray<ATW_BaseCharacter*> DeadEyeTargets;
+
+	int32 DeadEyeIndex = 0;
 };
 

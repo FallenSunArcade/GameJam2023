@@ -23,15 +23,19 @@ class TW_API ATW_BaseCharacter : public ACharacter
 public:
 	ATW_BaseCharacter();
 
-	bool FireGun();
+	bool FireGun(FVector ManualLocation = FVector::Zero(), FRotator ManualRotation = FRotator::ZeroRotator, bool ManualFireGun = false);
 	
 	bool CheckIsAiming() const { return bIsAiming;}
 
 	void SetTagVisibility(bool Visibility, FRotator ShotDirection = FRotator::ZeroRotator, float TagHeight = 0.f);
+	
+	FVector GetTagLocation();
+	
+	FRotator GetTagRotation();
 
 	bool IsTagged() const {return bTaggedVisible;}
 
-	void SetShootingFlag(bool ShootingFlag);
+	virtual void SetShootingFlag(bool ShootingFlag);
 
 	void SetReloadingFlag(bool ReloadingFlag) { bIsReloading = ReloadingFlag; }
 

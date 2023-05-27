@@ -2,7 +2,6 @@
 
 
 #include "TW_Characters/TW_BaseCharacter.h"
-
 #include "NiagaraFunctionLibrary.h"
 #include "TW_Actors/TW_Gun.h"
 #include "Components/CapsuleComponent.h"
@@ -10,6 +9,7 @@
 #include "Engine/DamageEvents.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "TW_ToolBox/TW_LogCategories.h"
 
 ATW_BaseCharacter::ATW_BaseCharacter()
 {
@@ -25,7 +25,7 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 	SetTagVisibility(false);
 }
 
-bool ATW_BaseCharacter::FireGun()
+bool ATW_BaseCharacter::FireGun(FVector ManualLocation, FRotator ManualRotation, bool ManualFireGun)
 {
 	
 	if(CurrentAmmo > 0 && !bIsReloading && Gun && AnimInstance && !bIsShooting)
@@ -39,7 +39,7 @@ bool ATW_BaseCharacter::FireGun()
 			AnimInstance->Montage_Play(FireGunHipMontage);
 		}
 			
-		Gun->FireGun();
+		Gun->FireGun(ManualLocation, ManualRotation, ManualFireGun);
 		CurrentAmmo = Gun->GetCurrentAmmo();
 		
 		return true;
@@ -55,6 +55,16 @@ void ATW_BaseCharacter::SetTagVisibility(bool Visibility, FRotator ShotDirection
 	DeadEyeMarkerMesh->SetWorldRotation(ShotDirection);
 	DeadEyeMarkerMesh->SetWorldLocation(TagLocation);
 	DeadEyeMarkerMesh->SetVisibility(Visibility);
+}
+
+FVector ATW_BaseCharacter::GetTagLocation()
+{
+	return DeadEyeMarkerMesh->GetComponentLocation();
+}
+
+FRotator ATW_BaseCharacter::GetTagRotation()
+{
+	return DeadEyeMarkerMesh->GetComponentRotation();
 }
 
 void ATW_BaseCharacter::SetShootingFlag(bool ShootingFlag)
