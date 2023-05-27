@@ -52,6 +52,8 @@ void ATW_Player::BeginPlay()
 	StartDeadEye.AddDynamic(this, &ATW_Player::DeadEyeInProgress);
 	EndDeadEye.AddDynamic(this, &ATW_Player::DeadEyeEnded);
 	PlayerAiming.AddDynamic(this, &ATW_Player::IsPlayerAiming);
+
+	UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
 	
 	GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 0.f);
 }
