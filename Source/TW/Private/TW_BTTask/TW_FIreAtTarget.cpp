@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "TW_Actors/TW_Gun.h"
 #include "TW_Characters/TW_BaseCharacter.h"
-#include "AIController.h"
+#include "TW_Controllers/TW_EnemyAIController.h"
 
 
 UTW_FIreAtTarget::UTW_FIreAtTarget()
@@ -19,14 +19,20 @@ EBTNodeResult::Type UTW_FIreAtTarget::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 	
 
-	ATW_BaseCharacter* OwningCharacter = Cast<ATW_BaseCharacter>(OwnerComp.GetAIOwner()->GetPawn());
-
-	if(!OwningCharacter)
+	if(ATW_BaseCharacter* OwningCharacter = Cast<ATW_BaseCharacter>(OwnerComp.GetAIOwner()->GetPawn()))
 	{
-		return EBTNodeResult::Failed;
+		if(const ATW_EnemyAIController * EnemyAIController = Cast<ATW_EnemyAIController>(OwnerComp.GetAIOwner()))
+		{
+			if(const AActor* TargetActor = EnemyAIController->GetTargetActor())
+			{
+				OwningCharacter->FireGun( TargetActor->GetActorLocation(), TargetActor->GetActorRotation(),
+			true, FMath::RandRange(0.1f, .5f));
+
+				return EBTNodeResult::Succeeded;
+			}
+		}
+
 	}
-	OwningCharacter->SetIsAiming(true);
-	OwningCharacter->FireGun( FVector::Zero(), FRotator::ZeroRotator,
-		false, FMath::RandRange(0.1f, .5f));
-	return EBTNodeResult::Succeeded;
+	
+	return EBTNodeResult::Failed;
 }

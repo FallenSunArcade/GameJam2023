@@ -32,6 +32,7 @@ void ATW_EnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus
 	{
 		if(Stimulus.WasSuccessfullySensed())
 		{
+			TargetActor = Actor;
 			GetBlackboardComponent()->SetValueAsBool("HasLineOfSight", true);
 			GetBlackboardComponent()->SetValueAsObject("TargetActor", Actor);
 		}

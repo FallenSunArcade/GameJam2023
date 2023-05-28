@@ -8,6 +8,7 @@
 
 class UBehaviorTree;
 class UAIPerceptionComponent;
+class AActor;
 
 UCLASS()
 class TW_API ATW_EnemyAIController : public AAIController
@@ -20,6 +21,8 @@ public:
 
 	UFUNCTION()
 	void OnTargetPerceptionUpdated( AActor* Actor, FAIStimulus Stimulus);
+
+	AActor* GetTargetActor() const { return TargetActor;}
 	
 private:
 	UPROPERTY(EditAnywhere)
@@ -27,4 +30,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UAIPerceptionComponent* AIPerceptionComponent;
+
+	UPROPERTY()
+	AActor* TargetActor;
 };
