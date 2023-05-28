@@ -6,9 +6,7 @@
 #include "BehaviorTree/Tasks/BTTask_BlackboardBase.h"
 #include "TW_FIreAtTarget.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class TW_API UTW_FIreAtTarget : public UBTTask_BlackboardBase
 {
