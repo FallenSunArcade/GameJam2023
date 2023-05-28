@@ -23,7 +23,8 @@ class TW_API ATW_BaseCharacter : public ACharacter
 public:
 	ATW_BaseCharacter();
 
-	bool FireGun(FVector ManualLocation = FVector::Zero(), FRotator ManualRotation = FRotator::ZeroRotator, bool ManualFireGun = false);
+	bool FireGun(FVector ManualLocation = FVector::Zero(),
+		FRotator ManualRotation = FRotator::ZeroRotator, bool ManualFireGun = false, float ScaleDamage = 1.f);
 	
 	bool CheckIsAiming() const { return bIsAiming;}
 

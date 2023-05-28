@@ -25,7 +25,7 @@ ATW_BaseCharacter::ATW_BaseCharacter()
 	SetTagVisibility(false);
 }
 
-bool ATW_BaseCharacter::FireGun(FVector ManualLocation, FRotator ManualRotation, bool ManualFireGun)
+bool ATW_BaseCharacter::FireGun(FVector ManualLocation, FRotator ManualRotation, bool ManualFireGun, float ScaleDamage)
 {
 	
 	if(CurrentAmmo > 0 && !bIsReloading && Gun && AnimInstance && !bIsShooting)
@@ -39,7 +39,7 @@ bool ATW_BaseCharacter::FireGun(FVector ManualLocation, FRotator ManualRotation,
 			AnimInstance->Montage_Play(FireGunHipMontage);
 		}
 			
-		Gun->FireGun(ManualLocation, ManualRotation, ManualFireGun);
+		Gun->FireGun(ManualLocation, ManualRotation, ManualFireGun, ScaleDamage);
 		CurrentAmmo = Gun->GetCurrentAmmo();
 		
 		return true;

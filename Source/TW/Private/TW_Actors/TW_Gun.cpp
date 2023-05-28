@@ -45,7 +45,7 @@ void ATW_Gun::RefillAmmo()
 	}
 }
 
-void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool ManualFireGun)
+void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool ManualFireGun, float ScaleDamage)
 {
 	--CurrentAmmo;
 	CurrentAmmo = FMath::Clamp(CurrentAmmo, 0, AmmoLoadingCapacity);
@@ -72,8 +72,15 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 		GunOwnerController->GetPlayerViewPoint(Location, Rotation);
 	}
 	
-	GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass, Location + Rotation.Vector() * 200,
-		Rotation);
+	if (ATW_Projectile* Projectile = GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass,
+		Location + Rotation.Vector() * 200, Rotation))
+	{
+		Projectile->ScaleDamage(ScaleDamage);	
+	}
+
+	
+
+	
 }
 
 void ATW_Gun::LoadingGun()

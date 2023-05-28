@@ -7,6 +7,7 @@
 #include "TW_EnemyAIController.generated.h"
 
 class UBehaviorTree;
+class UAIPerceptionComponent;
 
 UCLASS()
 class TW_API ATW_EnemyAIController : public AAIController
@@ -20,4 +21,7 @@ public:
 private:
 	UPROPERTY(EditAnywhere)
 	UBehaviorTree* BehaviorTree;
+
+	UPROPERTY(VisibleAnywhere)
+	UAIPerceptionComponent* AIPerceptionComponent;
 };

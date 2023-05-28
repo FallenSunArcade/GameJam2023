@@ -19,7 +19,9 @@ class TW_API ATW_Projectile : public AActor
 
 public:
 	ATW_Projectile();
-
+	
+	void ScaleDamage(float Scale){Damage *= Scale;}
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -28,7 +30,7 @@ protected:
 	void StartDestroyTimer();
 
 	void DestroyTimerFinished();
-
+	
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
