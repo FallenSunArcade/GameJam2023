@@ -134,7 +134,7 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 			DeathTimer,
 			this,
 			&ATW_BaseCharacter::DestroyCharacter,
-			2.f
+			1.f
 			);
 	}
 

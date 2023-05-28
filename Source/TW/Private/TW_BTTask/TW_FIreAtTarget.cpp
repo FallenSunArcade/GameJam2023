@@ -26,6 +26,7 @@ EBTNodeResult::Type UTW_FIreAtTarget::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		return EBTNodeResult::Failed;
 	}
 	OwningCharacter->SetIsAiming(true);
-    OwningCharacter->FireGun();
+	OwningCharacter->FireGun( FVector::Zero(), FRotator::ZeroRotator,
+		false, FMath::RandRange(0.1f, .5f));
 	return EBTNodeResult::Succeeded;
 }
