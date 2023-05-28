@@ -12,6 +12,7 @@ ATW_EnemyAIController::ATW_EnemyAIController(const FObjectInitializer& ObjectIni
 {
 	PrimaryActorTick.bCanEverTick = true;
 	AIPerceptionComponent = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("AIPerceptionComponent"));
+	AIPerceptionComponent->OnTargetPerceptionUpdated.AddDynamic(this, &ATW_EnemyAIController::OnTargetPerceptionUpdated);
 }
 
 void ATW_EnemyAIController::BeginPlay()
@@ -22,5 +23,23 @@ void ATW_EnemyAIController::BeginPlay()
 		RunBehaviorTree(BehaviorTree);
 	}
 
-	check(BehaviorTree);
+	
+}
+
+void ATW_EnemyAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
+{
+	if(Actor->ActorHasTag("Player"))
+	{
+		if(Stimulus.WasSuccessfullySensed())
+		{
+			GetBlackboardComponent()->SetValueAsBool("HasLineOfSight", true);
+			GetBlackboardComponent()->SetValueAsObject("TargetActor", Actor);
+		}
+		else
+		{
+			GetBlackboardComponent()->SetValueAsBool("HasLineOfSight", false);
+			//GetBlackboardComponent()->SetValueAsObject("TargetActor", GetOwner());
+		}
+	}
+	
 }

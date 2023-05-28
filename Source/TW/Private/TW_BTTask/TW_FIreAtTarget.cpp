@@ -25,7 +25,7 @@ EBTNodeResult::Type UTW_FIreAtTarget::ExecuteTask(UBehaviorTreeComponent& OwnerC
 	{
 		return EBTNodeResult::Failed;
 	}
-	
+	OwningCharacter->SetIsAiming(true);
     OwningCharacter->FireGun();
 	return EBTNodeResult::Succeeded;
 }

@@ -42,6 +42,8 @@ public:
 
 	virtual void FillAmmo();
 
+	void SetIsAiming(bool IsAiming) {bIsAiming = IsAiming;}
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnDeath();
 	

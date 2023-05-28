@@ -17,6 +17,9 @@ class TW_API ATW_EnemyAIController : public AAIController
 public:
 	ATW_EnemyAIController(const FObjectInitializer& ObjectInitializer);
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnTargetPerceptionUpdated( AActor* Actor, FAIStimulus Stimulus);
 	
 private:
 	UPROPERTY(EditAnywhere)
