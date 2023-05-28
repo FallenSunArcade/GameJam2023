@@ -59,6 +59,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void IsPlayerAiming(bool bAiming);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void GameStatusUpdate(const FString& Status);
 	
 	FORCEINLINE USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	

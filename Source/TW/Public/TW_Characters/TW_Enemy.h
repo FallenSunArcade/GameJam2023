@@ -13,8 +13,8 @@ class TW_API ATW_Enemy : public ATW_BaseCharacter
 
 public:
 	ATW_Enemy();
-
+	
 protected:
 	virtual void BeginPlay() override;
-	
+	virtual void Destroyed() override;
 };

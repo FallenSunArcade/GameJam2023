@@ -9,7 +9,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 #include "TW_Actors/TW_Gun.h"
+#include "TW_GameModes/TW_GameMode.h"
 #include "TW_UI/TW_Hud.h"
 #include "TW_ToolBox/TW_LogCategories.h"
 
@@ -46,6 +48,13 @@ void ATW_Player::BeginPlay()
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
+	}
+
+	ATW_GameMode* GameMode = Cast<ATW_GameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if(GameMode)
+	{
+		GameMode->GameStatusDelegate.AddDynamic(this, &ATW_Player::GameStatusUpdate);
 	}
 	
 	UpdateAmmoDelegate.AddDynamic(this, &ATW_Player::UpdateAmmo);
