@@ -145,6 +145,7 @@ void ATW_Player::ShootDeadEyeTargets()
 		++DeadEyeIndex;
 		UE_LOG(LogDeadeye, Display, TEXT("(DeadEyeTargets.Num() = %i %s)"), DeadEyeTargets.Num(), *GetName());
 		FireGun(CurrentTarget->GetTagLocation(), CurrentTarget->GetTagRotation(), true);
+		UpdateAmmoDelegate.Broadcast(CurrentAmmo, TotalAmmo);
 		CurrentTarget->SetTagVisibility(false);
 		
 	}

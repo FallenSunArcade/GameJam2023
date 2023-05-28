@@ -50,6 +50,8 @@ bool ATW_BaseCharacter::FireGun(FVector ManualLocation, FRotator ManualRotation,
 void ATW_BaseCharacter::SetTagVisibility(bool Visibility, FRotator ShotDirection, float TagHeight)
 {
 	bTaggedVisible = Visibility;
+	UE_LOG(LogDeadeye, Display, TEXT("(SetTagVisibility %s %s)"), (Visibility ? TEXT("true") : TEXT("false")), *GetName());
+
 	FVector TagLocation = DeadEyeMarkerMesh->GetComponentLocation();
 	TagLocation.Z = TagHeight;
 	DeadEyeMarkerMesh->SetWorldRotation(ShotDirection);
