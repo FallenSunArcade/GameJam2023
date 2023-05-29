@@ -21,7 +21,7 @@ class TW_API ATW_SpawnPoint : public AActor
 
 public:
 	ATW_SpawnPoint();
-	void Spawn();
+	void Spawn(bool UsingDelay, float Delay = 0.f);
 	
 protected:
 	virtual void BeginPlay() override;

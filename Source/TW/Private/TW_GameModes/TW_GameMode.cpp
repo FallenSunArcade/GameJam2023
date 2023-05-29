@@ -54,13 +54,13 @@ void ATW_GameMode::StartWave()
 		for(int i = 0; i < CurrentWave.Grunts; ++i)
 		{
 			const int32 RandomSpawnPoint = FMath::RandRange(0, GruntSpawnPoints.Num() - 1);
-			GruntSpawnPoints[RandomSpawnPoint]->Spawn();
+			GruntSpawnPoints[RandomSpawnPoint]->Spawn(false);
 		}
 
 		for(int i = 0; i < CurrentWave.Bosses; ++i)
 		{
 			const int32 RandomSpawnPoint = FMath::RandRange(0, BossSpawnPoints.Num() - 1);
-			BossSpawnPoints[RandomSpawnPoint]->Spawn();
+			BossSpawnPoints[RandomSpawnPoint]->Spawn(false);
 		}
 	}
 	else

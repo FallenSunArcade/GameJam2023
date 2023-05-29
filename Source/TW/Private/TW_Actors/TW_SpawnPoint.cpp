@@ -36,9 +36,19 @@ void ATW_SpawnPoint::DelayedSpawn()
 	}
 }
 
-void ATW_SpawnPoint::Spawn()
+void ATW_SpawnPoint::Spawn(bool UsingDelay, float Delay)
 {
-	GetWorldTimerManager().SetTimer(SpawnDelay, this, &ATW_SpawnPoint::DelayedSpawn, FMath::RandRange(0.f, 1.f));
+	if(UsingDelay)
+	{
+		GetWorldTimerManager().SetTimer(SpawnDelay, this, &ATW_SpawnPoint::DelayedSpawn, Delay);
+	}
+	else
+	{
+		if(*BaseCharacterClass)
+		{
+			GetWorld()->SpawnActor<ATW_BaseCharacter>(BaseCharacterClass, GetActorTransform());
+		}
+	}
 }
 
 
