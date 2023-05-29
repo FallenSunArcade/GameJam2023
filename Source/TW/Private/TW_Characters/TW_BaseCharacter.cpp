@@ -123,6 +123,11 @@ float ATW_BaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& Dama
 		UGameplayStatics::PlaySoundAtLocation(this, BulletHitNoiseSound, GetActorLocation());
 	}
 
+	if(AnimInstance)
+	{
+		AnimInstance->Montage_Play(HitImpactMontage);
+	}
+
 	if(CurrentHealth == 0)
 	{
 		OnDeathDelegate.Broadcast();

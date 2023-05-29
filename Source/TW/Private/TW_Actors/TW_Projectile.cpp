@@ -42,7 +42,7 @@ void ATW_Projectile::StartDestroyTimer()
 	DestroyTimer,
 	this,
 	&ATW_Projectile::DestroyTimerFinished,
-	1.f
+	2.f
 );
 }
 
@@ -54,8 +54,9 @@ void ATW_Projectile::DestroyTimerFinished()
 void ATW_Projectile::OnHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp,
                            FVector NormalImpulse, const FHitResult& Hit)
 {
+	SmokeTrail->DetachFromComponent({EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, EDetachmentRule::KeepWorld, false});
 	StartDestroyTimer();
-
+	Projectile->DestroyComponent(true);
 	if (AActor* HitActor = Hit.GetActor())
 	{
 		FPointDamageEvent DamageEvent(Damage, Hit, NormalImpulse, nullptr);

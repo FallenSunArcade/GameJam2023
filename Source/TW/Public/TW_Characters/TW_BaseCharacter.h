@@ -93,6 +93,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Montages")
 	UAnimMontage* ReloadGunMontage;
 
+	UPROPERTY(EditAnywhere, Category = "Montages")
+	UAnimMontage* HitImpactMontage;
+
 	UPROPERTY(EditAnywhere, Category = "DeadEyeMarker")
 	UStaticMeshComponent* DeadEyeMarkerMesh;
 	
