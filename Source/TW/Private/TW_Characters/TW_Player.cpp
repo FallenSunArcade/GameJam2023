@@ -178,6 +178,7 @@ void ATW_Player::UpdateDeadEyeMeter()
 		}
 		else
 		{
+			TurnRate = 20.f;
 			if(!DeadEyeTargets.IsEmpty())
 			{
 				if(!bShootingDeadEyeTargets)
@@ -292,12 +293,14 @@ void ATW_Player::DeadEye(const FInputActionValue& Value)
 {
 	if(!bDeadEyeInProgress && CurrentDeadEyeTime > 0)
 	{
+		TurnRate = 40.f;
 		bDeadEyeInProgress = true;
 		StartDeadEye.Broadcast(CurrentDeadEyeTime);
 		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 0.1f, true, 0.1f);
 	}
 	else
 	{
+		TurnRate = 20.f;
 		bDeadEyeInProgress = false;
 		GetWorldTimerManager().SetTimer(UpdateDeadEyeMeterHandle, this, &ATW_Player::UpdateDeadEyeMeter, 1.f, true, 1.f);
 		EndDeadEye.Broadcast(CurrentDeadEyeTime);
@@ -312,7 +315,7 @@ void ATW_Player::DeadEye(const FInputActionValue& Value)
 
 void ATW_Player::Reload(const FInputActionValue& Value)
 {
-	if(!bShootingDeadEyeTargets)
+	if(!bShootingDeadEyeTargets && !bDeadEyeInProgress)
 	{
 		ReloadGun();
 	}

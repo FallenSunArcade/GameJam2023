@@ -9,6 +9,7 @@
 #include "Engine/DamageEvents.h"
 #include "NiagaraComponent.h"
 #include "TW_Actors/TW_Projectile.h"
+#include "TW_Characters/TW_BaseCharacter.h"
 
 
 ATW_Gun::ATW_Gun()
@@ -66,26 +67,33 @@ void ATW_Gun::FireGun(FVector ManualLocation, FRotator ManualRotation, bool Manu
 			Location = ThisGunsOwner->GetActorLocation();
 			Rotation = (ManualLocation - Location).Rotation();
 		}
+
+		if (ATW_Projectile* Projectile = GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass,
+			Location + Rotation.Vector() * 300, Rotation))
+		{
+			Projectile->ScaleDamage(ScaleDamage);	
+		}
 	}
 	else
 	{
 		GunOwnerController->GetPlayerViewPoint(Location, Rotation);
+		int32 ZoomFactor = 400;
+		if(GunOwner->CheckIsAiming())
+		{
+			ZoomFactor = 200;
+		}
+		if (ATW_Projectile* Projectile = GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass,
+			Location + Rotation.Vector() * ZoomFactor, Rotation))
+		{
+			Projectile->ScaleDamage(ScaleDamage);	
+		}
 	}
-	
-	if (ATW_Projectile* Projectile = GetWorld()->SpawnActor<ATW_Projectile>(ProjectileClass,
-		Location + Rotation.Vector() * 200, Rotation))
-	{
-		Projectile->ScaleDamage(ScaleDamage);	
-	}
-
-	
-
 	
 }
 
 void ATW_Gun::LoadingGun()
 {
-	GunOwner = Cast<APawn>(GetOwner());
+	GunOwner = Cast<ATW_BaseCharacter>(GetOwner());
 	GunOwnerController = GunOwner->GetController();
 		
 	if(GunOwner && GunOwnerController)

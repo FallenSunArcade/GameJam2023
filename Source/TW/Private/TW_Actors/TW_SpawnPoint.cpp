@@ -28,12 +28,17 @@ void ATW_SpawnPoint::BeginPlay()
 	
 }
 
-void ATW_SpawnPoint::Spawn()
+void ATW_SpawnPoint::DelayedSpawn()
 {
 	if(*BaseCharacterClass)
 	{
 		GetWorld()->SpawnActor<ATW_BaseCharacter>(BaseCharacterClass, GetActorTransform());
 	}
+}
+
+void ATW_SpawnPoint::Spawn()
+{
+	GetWorldTimerManager().SetTimer(SpawnDelay, this, &ATW_SpawnPoint::DelayedSpawn, FMath::RandRange(0.f, 1.f));
 }
 
 

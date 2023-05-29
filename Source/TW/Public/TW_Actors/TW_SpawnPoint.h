@@ -25,11 +25,13 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-
+	void DelayedSpawn();
 private:
 	UPROPERTY(EditAnywhere, Category = "Spawn Point")
 	TSubclassOf<ATW_BaseCharacter> BaseCharacterClass;
 	
 	UPROPERTY(EditAnywhere, Category = "Spawn Point")
 	ESpawnTypes SpawnType;
+
+	FTimerHandle SpawnDelay;
 };

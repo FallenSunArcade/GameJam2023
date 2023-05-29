@@ -12,6 +12,7 @@ class AController;
 class UNiagaraComponent;
 class USoundBase;
 class ATW_Projectile;
+class ATW_BaseCharacter;
 
 UCLASS()
 class TW_API ATW_Gun : public AActor
@@ -75,7 +76,7 @@ private:
 	bool bInfiniteAmmo = false;
 
 	UPROPERTY()
-	APawn* GunOwner;
+	ATW_BaseCharacter* GunOwner;
 
 	UPROPERTY()
 	AController* GunOwnerController;
