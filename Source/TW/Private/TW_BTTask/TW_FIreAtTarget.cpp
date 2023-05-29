@@ -25,6 +25,7 @@ EBTNodeResult::Type UTW_FIreAtTarget::ExecuteTask(UBehaviorTreeComponent& OwnerC
 		{
 			if(const AActor* TargetActor = EnemyAIController->GetTargetActor())
 			{
+				OwningCharacter->SetIsAiming(true);
 				OwningCharacter->FireGun( TargetActor->GetActorLocation(), TargetActor->GetActorRotation(),
 			true, FMath::RandRange(0.1f, .5f));
 
